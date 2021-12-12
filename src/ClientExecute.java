@@ -1,7 +1,9 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -12,7 +14,8 @@ public class ClientExecute {
 
     public static ClientExecute instance= new ClientExecute();
     private ClientExecute(){
-        clientConnection = new ClientConnection("39.99.61.152");
+        serverAddress = "39.99.61.152";     //this address should be input by users
+        clientConnection = new ClientConnection(serverAddress);
         mainSocket = clientConnection.getMainSocket();
     }
     static ClientExecute getInstance(){
@@ -25,9 +28,14 @@ public class ClientExecute {
 
     void loginMessageSend(String userName,String password){
         try{
+            Socket loginSocket = new Socket(serverAddress, 10002);
+            BufferedWriter loginWriter = new BufferedWriter(new OutputStreamWriter(loginSocket.getOutputStream()));
+            loginWriter.write(userName);
+            loginWriter.write(password);
+            loginWriter.flush();
+            loginWriter.close();
 
-            ServerSocket loginSocket = new ServerSocket(10002);
-            Socket socket = loginSocket.accept();
+
         }catch (IOException e){
 
         }
