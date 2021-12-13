@@ -1,9 +1,7 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -35,9 +33,21 @@ public class ClientExecute {
             loginWriter.flush();
             loginWriter.close();
 
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    void registerMassageSend(FMPerson personToBeRegistered){
+        try{
+            Socket registerSocket = new Socket(serverAddress,10003);
+            DataOutputStream registerDOS = new DataOutputStream(registerSocket.getOutputStream());
+            ObjectOutputStream registerOOS = new ObjectOutputStream(registerDOS);
+            registerOOS.writeObject(personToBeRegistered);
 
         }catch (IOException e){
-
+            e.printStackTrace();
         }
 
     }
