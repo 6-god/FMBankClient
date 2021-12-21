@@ -3,11 +3,11 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-public class ClientConnection {
+public class ClientConnection {     //This class will connect the mainSocket
     private String serverIpAddress;
-    private Socket mainSocket = null;
-    static BufferedWriter bufferedWriter = null;
-    static BufferedReader bufferedReader = null;
+    private Socket mainSocket = new Socket();       //mainSocket is designed to transport the String message when you click button and jump to the next frame
+    static BufferedWriter bufferedWriter = null;    //mainSocket's writer
+    static BufferedReader bufferedReader = null;    //mainSocket's reader
 
     ClientConnection() {
         initialize();
@@ -19,22 +19,20 @@ public class ClientConnection {
     }
 
     void initialize() {             //connect the main socket
-        while (!mainSocket.isConnected()) {
-            try {
-                InetAddress address = InetAddress.getByName(serverIpAddress);
-                InetSocketAddress socketAddress = new InetSocketAddress(address, 10001);
-                mainSocket.connect(socketAddress);
-                bufferedReader = new BufferedReader(new InputStreamReader(mainSocket.getInputStream()));
-                bufferedWriter = new BufferedWriter(new OutputStreamWriter(mainSocket.getOutputStream()));
-                System.out.println("connected!");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            InetAddress address = InetAddress.getByName(serverIpAddress);
+            InetSocketAddress socketAddress = new InetSocketAddress(address, 10001);
+            mainSocket.connect(socketAddress);
+            bufferedReader = new BufferedReader(new InputStreamReader(mainSocket.getInputStream()));
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(mainSocket.getOutputStream()));
+            System.out.println("connected!");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
 
-//    class ReceiveThread extends Thread {
+//    class ReceiveThread extends Thread {      //there is no need to use multi-thread
 //        @Override
 //        public void run() {
 //
@@ -48,17 +46,14 @@ public class ClientConnection {
 //        }
 //    }
 
-    public static void Send(String messageToBeSend){
-        try{
+    public static void Send(String messageToBeSend) {       //method to send mainSocket message
+        try {
             bufferedWriter.write(messageToBeSend);
             bufferedWriter.flush();
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-
-
 
 
     public void setServerIpAddress(String serverIpAddress) {
