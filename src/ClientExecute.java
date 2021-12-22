@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class ClientExecute {        //create individual sockets to send different information
     private String serverAddress;
     private Socket mainSocket = null;
-    ClientConnection clientConnection = null;
+    ClientConnection clientConnection = ClientConnection.getInstance();
 
     public static ClientExecute instance = new ClientExecute();     //only one instance in a program
 

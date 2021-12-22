@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.net.Socket;
 import java.sql.Connection;
 import javax.swing.ImageIcon;
@@ -14,15 +15,18 @@ import javax.swing.JLabel;
 
 public class GUIFrames {
     private Socket mainSocket = ClientConnection.getInstance().getMainSocket();
-    private GUIFrames(){
+
+    private GUIFrames() {
 
     }
+
     static GUIFrames instance = new GUIFrames();
+
     public static GUIFrames getInstance() {
         return instance;
     }
 
-    void initialize(){
+    void initialize() {
         ClientConnection.getInstance();
         StartFrame.getInstance();
     }
@@ -31,26 +35,26 @@ public class GUIFrames {
         return mainSocket;
     }
 
-    public boolean mainIsConnected(){
+    public boolean mainIsConnected() {
         //GUIFrames.getInstance().setMainSocket(ClientConnection.getInstance().getMainSocket());
-        if(ClientConnection.getInstance().getMainSocket() == null) return false;
+        if (ClientConnection.getInstance().getMainSocket() == null) return false;
         System.out.println("main not null");
         return ClientConnection.getInstance().getMainSocket().isConnected();
     }
     //public static void main(String[] args) {
-        //new RegisterFrame();
-        //new RegisterResult();
-        //new LogicResult();
-        //new LoginFrame();
-        //new HomePage();
-        //new ChangeMoney();
-        //new TransferAccount();
-        //new ChangeResult();
-        //new TransferResult();
-        //new ChangeInformationSelection();
-        //new ChangeInformation();
-        //new ChangeInformationResult();
-        //new ROOTAccount();
+    //new RegisterFrame();
+    //new RegisterResult();
+    //new LogicResult();
+    //new LoginFrame();
+    //new HomePage();
+    //new ChangeMoney();
+    //new TransferAccount();
+    //new ChangeResult();
+    //new TransferResult();
+    //new ChangeInformationSelection();
+    //new ChangeInformation();
+    //new ChangeInformationResult();
+    //new ROOTAccount();
     //}
 
 
@@ -60,24 +64,24 @@ public class GUIFrames {
 }
 
 
-
 class StartFrame extends JFrame {
     public static StartFrame instance = new StartFrame();
     JFrame jf;
+
     private StartFrame() {
         jf = new JFrame("StartFrame");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JLabel title = new JLabel("Fei Ma Bank");
-        Font font = new Font("Times New Roman",Font.PLAIN,50);
+        Font font = new Font("Times New Roman", Font.PLAIN, 50);
         title.setFont(font);
         Button button1 = new Button("Register");
-        button1.setSize(100,5);
+        button1.setSize(100, 5);
         Button button2 = new Button("Login");
-        button2.setSize(100,5);
+        button2.setSize(100, 5);
         Button button3 = new Button("Administrator");
-        button3.setSize(100,5);
+        button3.setSize(100, 5);
         Button button4 = new Button("Change IP");
-        button3.setSize(100,5);
+        button3.setSize(100, 5);
         //因为addActionListener需要一个ActionListener，所以就要new一个出来
         SFActionListener01 sfActionListener01 = new SFActionListener01();
         button1.addActionListener(sfActionListener01);
@@ -108,20 +112,22 @@ class StartFrame extends JFrame {
         jf.setContentPane(baseBox);
         jf.pack();
         jf.setLocationRelativeTo(null);
-        jf.setSize(150,300);
-        jf.setBounds(400,300,500,500);
+        jf.setSize(150, 300);
+        jf.setBounds(400, 300, 500, 500);
         jf.setVisible(true);
         windowClose(jf);
 
     }
-    static StartFrame getInstance(){
+
+    static StartFrame getInstance() {
         return instance;
     }
 
 
-    JFrame getThisFrame(){
+    JFrame getThisFrame() {
         return jf;
     }
+
     //抽取关闭监听事件出来
     private static void windowClose(Frame frame) {
         frame.addWindowListener(new WindowAdapter() {
@@ -137,9 +143,9 @@ class SFActionListener01 implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-            System.out.println("loading start frame");
-            RegisterFrame.getInstance().getJf().setVisible(true);
-            StartFrame.getInstance().getThisFrame().dispose();
+        System.out.println("register");
+        RegisterFrame.getInstance().getJf().setVisible(true);
+        StartFrame.getInstance().getThisFrame().dispose();
     }
 }
 
@@ -148,9 +154,10 @@ class SFActionListener02 implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-            System.out.println("aab");
-            LoginFrame.getInstance().getJf().setVisible(true);
-            StartFrame.getInstance().getThisFrame().dispose();
+        System.out.println("Login frame");
+        ClientConnection.Send("Login\n");
+        LoginFrame.getInstance().getJf().setVisible(true);
+        StartFrame.getInstance().getThisFrame().dispose();
 
 
     }
@@ -161,9 +168,9 @@ class SFActionListener03 implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-            System.out.println("root");
-            ROOTAccount.getInstance().getJf().setVisible(true);
-            StartFrame.getInstance().getThisFrame().dispose();
+        System.out.println("root");
+        ROOTAccount.getInstance().getJf().setVisible(true);
+        StartFrame.getInstance().getThisFrame().dispose();
 
 
     }
@@ -185,6 +192,7 @@ class SFActionListener04 implements ActionListener {
 class RegisterFrame extends JFrame {
     private static RegisterFrame instance = new RegisterFrame();
     JFrame jf;
+
     private RegisterFrame() {
         jf = new JFrame("Users Login:");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -263,20 +271,22 @@ class RegisterFrame extends JFrame {
         vBox.add(button2);
 
         jf.setContentPane(vBox);
-        jf.setSize(1000,1000);
+        jf.setSize(1000, 1000);
         jf.pack();
         jf.setLocationRelativeTo(null);
         jf.setVisible(true);
         windowClose(jf);
 
     }
-    static RegisterFrame getInstance(){
+
+    static RegisterFrame getInstance() {
         return instance;
     }
 
-    JFrame getJf(){
+    JFrame getJf() {
         return jf;
     }
+
     //抽取关闭监听事件出来
     private static void windowClose(Frame frame) {
         frame.addWindowListener(new WindowAdapter() {
@@ -352,10 +362,13 @@ class RRActionListener implements ActionListener {
 class LoginFrame extends JFrame {
     private static LoginFrame instance = new LoginFrame();
     private JFrame jf;
+
     public JFrame getJf() {
         return jf;
     }
 
+    JTextField username = new JTextField(10);
+    JPasswordField password = new JPasswordField(10);
     private LoginFrame() {
         jf = new JFrame("LoginFrame");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -366,14 +379,14 @@ class LoginFrame extends JFrame {
         panel01.add(label001);
         label01.setText("");
         label01.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
-        panel01.add(new JTextField(10));
+        panel01.add(username);
         panel01.add(label01);
         // 第 2 个 JPanel, 使用默认的浮动布局
         JPanel panel02 = new JPanel();
         JLabel label002 = new JLabel();
         label002.setText("password");
         panel02.add(label002);
-        panel02.add(new JPasswordField(10));
+        panel02.add(password);
         JLabel label02 = new JLabel();
         label02.setText("");
         label02.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
@@ -399,9 +412,18 @@ class LoginFrame extends JFrame {
 
     }
 
-    public static LoginFrame getInstance(){
+    public static LoginFrame getInstance() {
         return instance;
     }
+
+    String getUserName(){
+        return username.getText();
+    }
+
+    String getPassWord(){
+        return String.valueOf(password.getPassword());
+    }
+
     //抽取关闭监听事件出来
     private static void windowClose(Frame frame) {
         frame.addWindowListener(new WindowAdapter() {
@@ -416,7 +438,25 @@ class LoginFrame extends JFrame {
 class LFActionListener01 implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("aaa");
+        System.out.println("try login");
+        String username = LoginFrame.getInstance().getUserName();
+        String password = LoginFrame.getInstance().getPassWord();
+        String result = null;
+        boolean flag = false;
+        ClientExecute.getInstance().loginMessageSend(username,password);
+        try {
+            result = ClientConnection.getInstance().bufferedReader.readLine();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        if(result.equals("login succeed")){
+            flag = true;
+            LoginResult.getInstance().setFlag(0);
+        }
+        LoginResult.getInstance().setLabel01();
+        LoginResult.getInstance().setVisible(true);
+        LoginFrame.getInstance().getJf().dispose();
+
 
     }
 }
@@ -424,7 +464,7 @@ class LFActionListener01 implements ActionListener {
 class LFActionListener02 implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("aaa");
+        System.out.println("return start menu");
         StartFrame.getInstance().getThisFrame().setVisible(true);
         LoginFrame.getInstance().getJf().dispose();
     }
@@ -433,25 +473,30 @@ class LFActionListener02 implements ActionListener {
 
 class LoginResult extends JFrame {
     private JFrame jf;
+
+    private int flag = -1;
     public JFrame getJf() {
         return jf;
     }
+
     private static LoginResult instance = new LoginResult();
+
     public static LoginResult getInstance() {
         return instance;
     }
-
+    JLabel label01;
     private LoginResult() {
+
         jf = new JFrame("LogicResult");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JPanel panel01 = new JPanel();
-        JLabel label01 = new JLabel();
+        label01 = new JLabel();
         JLabel label02 = new JLabel();
         label02.setIcon(new ImageIcon("img/01.jpg"));
         Button button = new Button("confirm");
         LRActionListener lrActionListener = new LRActionListener();
         button.addActionListener(lrActionListener);
-        label01.setText("");
+
         label01.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
         Box vBox = Box.createVerticalBox();
         vBox.add(panel01);
@@ -464,6 +509,22 @@ class LoginResult extends JFrame {
         jf.setVisible(true);
         windowClose(jf);
 
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
+    }
+
+    public void setLabel01(){
+        if(flag == 0){
+            label01.setText("Login Successfully!");
+        } else{
+            label01.setText("Login Failed!");
+        }
+    }
+
+    public int getFlag() {
+        return flag;
     }
 
     //抽取关闭监听事件出来
@@ -480,7 +541,16 @@ class LoginResult extends JFrame {
 class LRActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("aaa");
+        if(LoginResult.getInstance().getFlag()==0){ //login successfully, you will go to home page
+            System.out.println("home page ");
+            LoginResult.getInstance().getJf().dispose();
+            HomePage.getInstance().getJf().setVisible(true);
+        }else { //  back to the start menu
+            System.out.println("start menu");
+            LoginResult.getInstance().getJf().dispose();
+            StartFrame.getInstance().getThisFrame().setVisible(true);
+        }
+
     }
 }
 
@@ -1004,6 +1074,7 @@ class ChangeInformationResult extends JFrame {
     public JFrame getJf() {
         return jf;
     }
+
     public static ChangeInformationResult instance = new ChangeInformationResult();
 
     public static ChangeInformationResult getInstance() {
@@ -1074,7 +1145,7 @@ class ROOTAccount extends JFrame {
         label01.setFont(new Font(null, Font.PLAIN, 20));  // 设置字体，null 表示使用默认字体
         Button button1 = new Button("Import accounts from XLS files");
         Button button2 = new Button("Export all users to users.xls");
-        Button button3 = new Button("Generating PDF reports");
+        Button button3 = new Button("Generate PDF reports");
         Button button4 = new Button("close accounts of old people over 70 years old");
         RAActionListener01 raActionListener01 = new RAActionListener01();
         button1.addActionListener(raActionListener01);
@@ -1138,7 +1209,7 @@ class RAActionListener04 implements ActionListener {
     }
 }
 
-class NoConnectionFrame{
+class NoConnectionFrame {
     private JFrame jf;
 
     public JFrame getJf() {
@@ -1153,7 +1224,7 @@ class NoConnectionFrame{
         return instance;
     }
 
-    private NoConnectionFrame(){
+    private NoConnectionFrame() {
         jf = new JFrame("CHANGE YOUR IP ADDRESS HERE");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JLabel titleLabel = new JLabel("");
@@ -1174,7 +1245,6 @@ class NoConnectionFrame{
         vBox.add(buttonReturn);
 
 
-
         jf.setContentPane(vBox);
         jf.pack();
         jf.setLocationRelativeTo(null);
@@ -1192,7 +1262,7 @@ class NoConnectionFrame{
         });
     }
 
-    String getIpaddress(){
+    String getIpaddress() {
         return ipText.getText();
     }
 
