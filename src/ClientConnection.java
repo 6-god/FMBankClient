@@ -4,28 +4,30 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class ClientConnection {     //This class will connect the mainSocket
-    private String serverIpAddress;
-    private Socket mainSocket = new Socket();       //mainSocket is designed to transport the String message when you click button and jump to the next frame
+    private String serverIpAddress = "localhost";
+    private Socket mainSocket;       //mainSocket is designed to transport the String message when you click button and jump to the next frame
     static BufferedWriter bufferedWriter = null;    //mainSocket's writer
     static BufferedReader bufferedReader = null;    //mainSocket's reader
+    private static ClientConnection instance = new ClientConnection();
 
-    ClientConnection() {
-        initialize();
+    public static ClientConnection getInstance() {
+        return instance;
     }
 
-    ClientConnection(String ipAddress) {
-        serverIpAddress = ipAddress;
+    private ClientConnection() {
         initialize();
     }
 
     void initialize() {             //connect the main socket
         try {
+            mainSocket = new Socket();
+            System.out.println(serverIpAddress);
             InetAddress address = InetAddress.getByName(serverIpAddress);
             InetSocketAddress socketAddress = new InetSocketAddress(address, 10001);
             mainSocket.connect(socketAddress);
             bufferedReader = new BufferedReader(new InputStreamReader(mainSocket.getInputStream()));
             bufferedWriter = new BufferedWriter(new OutputStreamWriter(mainSocket.getOutputStream()));
-            System.out.println("connected!");
+            System.out.println("initialize connected!");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -15,8 +15,8 @@ public class ClientExecute {        //create individual sockets to send differen
     public static ClientExecute instance = new ClientExecute();     //only one instance in a program
 
     private ClientExecute() {
-        serverAddress = "39.99.61.152";     //Not Done: this address should be input by users
-        clientConnection = new ClientConnection(serverAddress);
+        //serverAddress = "localhost";     //Not Done: this address should be input by users
+        ClientConnection.getInstance();
         mainSocket = clientConnection.getMainSocket();
     }
 
