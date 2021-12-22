@@ -4,10 +4,10 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class ClientConnection {     //This class will connect the mainSocket
-    private String serverIpAddress = "localhost";
+    private String serverIpAddress = "39.99.61.152";
     private Socket mainSocket;       //mainSocket is designed to transport the String message when you click button and jump to the next frame
-    static BufferedWriter bufferedWriter = null;    //mainSocket's writer
-    static BufferedReader bufferedReader = null;    //mainSocket's reader
+    private static BufferedWriter bufferedWriter = null;    //mainSocket's writer
+    private static BufferedReader bufferedReader = null;    //mainSocket's reader
     private static ClientConnection instance = new ClientConnection();
 
     public static ClientConnection getInstance() {
@@ -28,6 +28,8 @@ public class ClientConnection {     //This class will connect the mainSocket
             bufferedReader = new BufferedReader(new InputStreamReader(mainSocket.getInputStream()));
             bufferedWriter = new BufferedWriter(new OutputStreamWriter(mainSocket.getOutputStream()));
             System.out.println("initialize connected!");
+            ClientExecute.getInstance();
+            ClientExecute.getInstance().setServerAddress(serverIpAddress);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -66,11 +68,11 @@ public class ClientConnection {     //This class will connect the mainSocket
         return mainSocket;
     }
 
-    public static BufferedReader getBufferedReader() {
+    public BufferedReader getBufferedReader() {
         return bufferedReader;
     }
 
-    public static BufferedWriter getBufferedWriter() {
+    public BufferedWriter getBufferedWriter() {
         return bufferedWriter;
     }
 }

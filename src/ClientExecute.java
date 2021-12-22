@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+
 public class ClientExecute {        //create individual sockets to send different information
     private String serverAddress;
     private Socket mainSocket = null;
@@ -17,7 +18,7 @@ public class ClientExecute {        //create individual sockets to send differen
     private ClientExecute() {
         //serverAddress = "localhost";     //Not Done: this address should be input by users
         ClientConnection.getInstance();
-        mainSocket = clientConnection.getMainSocket();
+        //mainSocket = clientConnection.getMainSocket();
     }
 
     static ClientExecute getInstance() {
@@ -30,13 +31,17 @@ public class ClientExecute {        //create individual sockets to send differen
 
     void loginMessageSend(String userName, String password) {       //send username and password to server
         try {
+            System.out.println("server address:" + serverAddress);
             Socket loginSocket = new Socket(serverAddress, 10002);
             BufferedWriter loginWriter = new BufferedWriter(new OutputStreamWriter(loginSocket.getOutputStream()));
-            loginWriter.write(userName);
-            loginWriter.write(password);
+            loginWriter.write(userName + "\n");
+            //loginWriter.newLine();
+            loginWriter.write(password + "\n");
+            //loginWriter.newLine();
             loginWriter.flush();
             loginWriter.close();
-
+            loginSocket.close();
+            System.out.println("login send done!");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,6 +55,7 @@ public class ClientExecute {        //create individual sockets to send differen
             ObjectOutputStream registerOOS = new ObjectOutputStream(registerDOS);
             registerOOS.writeObject(personToBeRegistered);
             registerOOS.close();
+            registerSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -62,6 +68,7 @@ public class ClientExecute {        //create individual sockets to send differen
             DataInputStream homePageDIS = new DataInputStream(homepageReceiveSocket.getInputStream());
             ObjectInputStream homePageOIS = new ObjectInputStream(homePageDIS);
             FMPerson homepagePerson = (FMPerson) homePageOIS.readObject();
+            homepageReceiveSocket.close();
             return homepagePerson;
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -76,6 +83,7 @@ public class ClientExecute {        //create individual sockets to send differen
             DataOutputStream moneyChangeDOS = new DataOutputStream(moneyChangeSocket.getOutputStream());
             moneyChangeDOS.writeDouble(changeAmount);
             moneyChangeDOS.close();
+            moneyChangeSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,6 +98,7 @@ public class ClientExecute {        //create individual sockets to send differen
             transferBufferedWriter.write(amount.toString());
             transferBufferedWriter.flush();
             transferBufferedWriter.close();
+            transferSendSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -126,6 +135,7 @@ public class ClientExecute {        //create individual sockets to send differen
             ObjectOutputStream personListOOS = new ObjectOutputStream(personListDOS);
             personListOOS.writeObject(personList);
             personListOOS.close();
+            personListSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -140,6 +150,7 @@ public class ClientExecute {        //create individual sockets to send differen
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
+
             return null;
         }
     }
@@ -156,17 +167,19 @@ public class ClientExecute {        //create individual sockets to send differen
     }
 
 
-
-    void exportPdfToLocation(String location){
-        if(location == null){
+    void exportPdfToLocation(String location) {
+        if (location == null) {
 
         }
 
     }
 
-    void exportXlsToLocation(String location, ArrayList<FMPerson> personInXls){
+    void exportXlsToLocation(String location, ArrayList<FMPerson> personInXls) {
 
     }
 
 
+    public void setServerAddress(String serverAddress) {
+        this.serverAddress = serverAddress;
+    }
 }

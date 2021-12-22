@@ -244,7 +244,7 @@ class RegisterFrame extends JFrame {
         label06.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
         panel06.add(label06);
 
-        Button button1 = new Button("LOGIN");
+        Button button1 = new Button("REGISTER");
         Button button2 = new Button("RETURN");
         //因为addActionListener需要一个ActionListener，所以就要new一个出来
         RFActionListener01 rfActionListener01 = new RFActionListener01();
@@ -323,7 +323,7 @@ class RegisterResult extends JFrame {
         JLabel label01 = new JLabel();
         JLabel label02 = new JLabel();
         label02.setIcon(new ImageIcon("img/02.jpg"));
-        Button button = new Button("confirm");
+        Button button = new Button("OK");
         RRActionListener rrActionListener = new RRActionListener();
         button.addActionListener(rrActionListener);
         label01.setText("");
@@ -445,7 +445,7 @@ class LFActionListener01 implements ActionListener {
         boolean flag = false;
         ClientExecute.getInstance().loginMessageSend(username,password);
         try {
-            result = ClientConnection.getInstance().bufferedReader.readLine();
+            result = ClientConnection.getInstance().getBufferedReader().readLine();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -454,7 +454,7 @@ class LFActionListener01 implements ActionListener {
             LoginResult.getInstance().setFlag(0);
         }
         LoginResult.getInstance().setLabel01();
-        LoginResult.getInstance().setVisible(true);
+        LoginResult.getInstance().getJf().setVisible(true);
         LoginFrame.getInstance().getJf().dispose();
 
 
@@ -493,7 +493,7 @@ class LoginResult extends JFrame {
         label01 = new JLabel();
         JLabel label02 = new JLabel();
         label02.setIcon(new ImageIcon("img/01.jpg"));
-        Button button = new Button("confirm");
+        Button button = new Button("OK");
         LRActionListener lrActionListener = new LRActionListener();
         button.addActionListener(lrActionListener);
 
@@ -576,10 +576,10 @@ class HomePage extends JFrame {
         JLabel label01 = new JLabel();
         label01.setText("");
         label01.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
-        Button button1 = new Button("save");
-        Button button2 = new Button("draw");
-        Button button3 = new Button("transfer accounts");
-        Button button4 = new Button("modify personal information");
+        Button button1 = new Button("Deposit");     //存款
+        Button button2 = new Button("Withdrawal");  //提款
+        Button button3 = new Button("Transfer");
+        Button button4 = new Button("Modify personal information");
         Button button5 = new Button("log out");
         //因为addActionListener需要一个ActionListener，所以就要new一个出来
         HPActionListener01 hpActionListener01 = new HPActionListener01();
@@ -595,6 +595,7 @@ class HomePage extends JFrame {
         Box vBox = Box.createVerticalBox();
 // 创建一个垂直盒子容器, 把上面 6 个 JPanel 串起来作为内容面板添加到窗口
         vBox.add(label01);
+
         vBox.add(label02);
         vBox.add(button1);
         vBox.add(button2);
@@ -623,39 +624,62 @@ class HomePage extends JFrame {
 class HPActionListener01 implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("aaa");
+        System.out.println("Deposit");
+        ChangeMoney.getInstance().setDeposit(true);
+        HomePage.getInstance().getJf().dispose();
+        ChangeMoney.getInstance().getJf().setVisible(true);
+        ClientConnection.Send("Change Money");
     }
 }
 
 class HPActionListener02 implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("aaa");
+        System.out.println("Withdrawal");
+        ChangeMoney.getInstance().setDeposit(false);
+        HomePage.getInstance().getJf().dispose();
+        ChangeMoney.getInstance().getJf().setVisible(true);
+        ClientConnection.Send("Change Money");
     }
 }
 
 class HPActionListener03 implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("aaa");
+        System.out.println("transfer");
+        HomePage.getInstance().getJf().dispose();
+        TransferAccount.getInstance().getJf().setVisible(true);
+        ClientConnection.Send("Transfer Account");
     }
 }
 
 class HPActionListener04 implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("aaa");
+        System.out.println("change personal information");
+        HomePage.getInstance().getJf().dispose();
+        ChangeInformation.getInstance().getJf().setVisible(true);
+        ClientConnection.Send("Change Personal Information");
     }
 }
 
 class HPActionListener05 implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("aaa");
+        System.out.println("logout");
+        System.exit(0);
     }
 }
 
+
+
 class ChangeMoney extends JFrame {
+    private boolean deposit;
+    JTextField money = new JTextField(25);
+    public void setDeposit(boolean deposit) {
+        this.deposit = deposit;
+    }
+
     private JFrame jf;
 
     public JFrame getJf() {
@@ -674,15 +698,20 @@ class ChangeMoney extends JFrame {
         JPanel panel01 = new JPanel();
         JLabel label01 = new JLabel();
         JLabel label001 = new JLabel();
-        label001.setText("save or draw");
+        if(deposit){
+            label001.setText("Deposit");
+        } else{
+            label001.setText("Withdrawal");
+        }
+
         panel01.add(label01);
         panel01.add(label001);
         label01.setText("please enter the amount");
         label001.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
-        panel01.add(new JTextField(25));
+        panel01.add(money);
         JLabel label02 = new JLabel();
         label02.setIcon(new ImageIcon("img/03.jpg"));
-        Button button = new Button("confirm");
+        Button button = new Button("OK");
         //因为addActionListener需要一个ActionListener，所以就要new一个出来
         CMActionListener cmActionListener = new CMActionListener();
         button.addActionListener(cmActionListener);
@@ -709,18 +738,39 @@ class ChangeMoney extends JFrame {
             }
         });
     }
-}
 
-class CMActionListener implements ActionListener {
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        System.out.println("aaa");
+    class CMActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Double amount = Math.abs(Double.valueOf(money.getText()));
+            if(!deposit){
+                amount = -1.0 *amount;
+            }
+            ClientExecute.getInstance().changeMoneySend(amount);
+            try{
+               String result = ClientConnection.getInstance().getBufferedReader().readLine();
+               if(result.equals("succeed")){
+                   ChangeResult.getInstance().succeed = true;
+               } else{  //  money not enough
+                   ChangeResult.getInstance().succeed = false;
+               }
+               ChangeResult.getInstance().changeLabel();
+               ChangeResult.getInstance().getJf().setVisible(true);
+               ChangeMoney.getInstance().dispose();
+
+            }catch (IOException ex){
+                ex.printStackTrace();
+            }
+        }
     }
 }
 
+
+
 class ChangeResult extends JFrame {
     private JFrame jf;
-
+    boolean succeed;
+    JLabel label01;
     public JFrame getJf() {
         return jf;
     }
@@ -735,13 +785,13 @@ class ChangeResult extends JFrame {
         JFrame jf = new JFrame("ChangeResult");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JPanel panel01 = new JPanel();
-        JLabel label01 = new JLabel();
+
+
         JLabel label02 = new JLabel();
         label02.setIcon(new ImageIcon("img/05.jpg"));
-        Button button = new Button("confirm");
+        Button button = new Button("OK");
         CRActionListener crActionListener = new CRActionListener();
         button.addActionListener(crActionListener);
-        label01.setText("");
         label01.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
         Box vBox = Box.createVerticalBox();
         vBox.add(panel01);
@@ -751,9 +801,17 @@ class ChangeResult extends JFrame {
         jf.setContentPane(vBox);
         jf.pack();
         jf.setLocationRelativeTo(null);
-        jf.setVisible(true);
+        //jf.setVisible(true);
         windowClose(jf);
 
+    }
+
+    void changeLabel(){
+        if(succeed){
+            label01 = new JLabel("CHANGE MONEY SUCCESSFULLY");
+        } else {
+            label01 = new JLabel("YOUR MONEY IS NOT ENOUGH");
+        }
     }
 
     //抽取关闭监听事件出来
@@ -770,13 +828,16 @@ class ChangeResult extends JFrame {
 class CRActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("aaa");
+        ChangeResult.getInstance().getJf().dispose();
+        HomePage.getInstance().getJf().setVisible(true);
     }
 }
 
 class TransferAccount extends JFrame {
     private JFrame jf;
 
+    JTextField toId = new JTextField(10);
+    JTextField amount = new JTextField(10);
     public JFrame getJf() {
         return jf;
     }
@@ -795,18 +856,18 @@ class TransferAccount extends JFrame {
         label01.setText("transfer account               ");
         label01.setFont(new Font(null, Font.PLAIN, 25));
         JLabel label001 = new JLabel();
-        label001.setText("Counterparty account name");
+        label001.setText("UserId You Want To Transferred To:");
         panel01.add(label01);
         panel01.add(label001);
-        panel01.add(new JPasswordField(10));
+        panel01.add(toId);
         // 第 2 个 JPanel, 使用默认的浮动布局
         JPanel panel02 = new JPanel();
         JLabel label002 = new JLabel();
-        label002.setText("password");
+        label002.setText("Money Amount:(must be positive number)");
         panel02.add(label002);
-        panel02.add(new JPasswordField(10));
-        Button button1 = new Button("confirm");
-        Button button2 = new Button("return");
+        panel02.add(amount);
+        Button button1 = new Button("OK");
+        Button button2 = new Button("RETURN");
         //因为addActionListener需要一个ActionListener，所以就要new一个出来
         TAActionListener01 taActionListener01 = new TAActionListener01();
         button1.addActionListener(taActionListener01);
@@ -827,6 +888,22 @@ class TransferAccount extends JFrame {
 
     }
 
+    class TAActionListener01 implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("start transfer to server");
+            ClientExecute.getInstance().transferAccountSend(toId.getText(),Math.abs(Double.parseDouble(amount.getText())));
+            try{
+                String result = ClientConnection.getInstance().getBufferedReader().readLine();
+                TransferResult.getInstance().setResult(result);
+                TransferResult.getInstance().getJf().setVisible(true);
+                TransferAccount.getInstance().getJf().dispose();
+            }catch (IOException ioE){
+                ioE.printStackTrace();
+            }
+        }
+    }
+
     //抽取关闭监听事件出来
     private static void windowClose(Frame frame) {
         frame.addWindowListener(new WindowAdapter() {
@@ -838,22 +915,25 @@ class TransferAccount extends JFrame {
     }
 }
 
-class TAActionListener01 implements ActionListener {
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        System.out.println("aaa");
-    }
-}
+
 
 class TAActionListener02 implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("aaa");
+        System.out.println("return homepage");
+        TransferAccount.getInstance().getJf().dispose();
+        HomePage.getInstance().getJf().setVisible(true);
     }
 }
 
 class TransferResult extends JFrame {
     JFrame jf;
+
+    private String result;
+
+    public void setResult(String result) {
+        this.result = result;
+    }
 
     public JFrame getJf() {
         return jf;
@@ -872,10 +952,10 @@ class TransferResult extends JFrame {
         JLabel label01 = new JLabel();
         JLabel label02 = new JLabel();
         label02.setIcon(new ImageIcon("img/04.jpg"));
-        Button button = new Button("confirm");
+        Button button = new Button("OK");
         TRActionListener trActionListener = new TRActionListener();
         button.addActionListener(trActionListener);
-        label01.setText("");
+        label01.setText(result);
         label01.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
         Box vBox = Box.createVerticalBox();
         vBox.add(panel01);
@@ -904,7 +984,9 @@ class TransferResult extends JFrame {
 class TRActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("aaa");
+        System.out.println("return homepage");
+        HomePage.getInstance().getJf().setVisible(true);
+        TransferResult.getInstance().getJf().dispose();
     }
 }
 
@@ -1032,7 +1114,7 @@ class ChangeInformation extends JFrame {
         panel01.add(new JTextField(25));
         JLabel label02 = new JLabel();
         label02.setIcon(new ImageIcon("img/06.jpg"));
-        Button button = new Button("confirm");
+        Button button = new Button("OK");
         //因为addActionListener需要一个ActionListener，所以就要new一个出来
         CIActionListener ciActionListener = new CIActionListener();
         button.addActionListener(ciActionListener);
@@ -1088,7 +1170,7 @@ class ChangeInformationResult extends JFrame {
         JLabel label01 = new JLabel();
         JLabel label02 = new JLabel();
         label02.setIcon(new ImageIcon("img/07.png"));
-        Button button = new Button("confirm");
+        Button button = new Button("OK");
         CIRActionListener cirActionListener = new CIRActionListener();
         button.addActionListener(cirActionListener);
         label01.setText("");
@@ -1231,20 +1313,22 @@ class NoConnectionFrame {
         JLabel textLabel = new JLabel("Please input the IP address below");
         JLabel label = new JLabel("IP address:");
         ipText = new JTextField();
-
+//        ipText.setSize(100,10);
         JButton buttonReturn = new JButton("OK");
         NCFListener ncfListener = new NCFListener();
         buttonReturn.addActionListener(ncfListener);
 
-        Box subBox = Box.createHorizontalBox();
         Box vBox = Box.createVerticalBox();
+        vBox.add(Box.createVerticalStrut(10));
         vBox.add(titleLabel);
-        subBox.add(textLabel);
-        subBox.add(ipText);
-        vBox.add(subBox);
+        vBox.add(Box.createVerticalStrut(10));
+        vBox.add(textLabel);
+        vBox.add(Box.createVerticalStrut(10));
+        vBox.add(ipText);
+        vBox.add(Box.createVerticalStrut(10));
         vBox.add(buttonReturn);
 
-
+        jf.setSize(1000, 1000);
         jf.setContentPane(vBox);
         jf.pack();
         jf.setLocationRelativeTo(null);
