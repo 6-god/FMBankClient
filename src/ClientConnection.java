@@ -54,6 +54,7 @@ public class ClientConnection {     //This class will connect the mainSocket
         try {
             bufferedWriter.write(messageToBeSend);
             bufferedWriter.flush();
+            System.out.println("main socket send :"+messageToBeSend);
         } catch (IOException e) {
             e.printStackTrace();
         }

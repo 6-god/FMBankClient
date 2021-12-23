@@ -82,6 +82,7 @@ public class ClientExecute {        //create individual sockets to send differen
             Socket moneyChangeSocket = new Socket(serverAddress, 10005);
             DataOutputStream moneyChangeDOS = new DataOutputStream(moneyChangeSocket.getOutputStream());
             moneyChangeDOS.writeDouble(changeAmount);
+            moneyChangeDOS.flush();
             moneyChangeDOS.close();
             moneyChangeSocket.close();
         } catch (IOException e) {

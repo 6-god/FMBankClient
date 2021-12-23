@@ -9,6 +9,9 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.Connection;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -144,6 +147,7 @@ class SFActionListener01 implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         System.out.println("register");
+        ClientConnection.Send("Login");
         RegisterFrame.getInstance().getJf().setVisible(true);
         StartFrame.getInstance().getThisFrame().dispose();
     }
@@ -192,7 +196,12 @@ class SFActionListener04 implements ActionListener {
 class RegisterFrame extends JFrame {
     private static RegisterFrame instance = new RegisterFrame();
     JFrame jf;
-
+    JTextField text1 = new JTextField(10);
+    JPasswordField text2 = new JPasswordField(10);
+    JTextField text3 = new JTextField(10);
+    JTextField text4 = new JTextField(10);
+    JTextField text5 = new JTextField(10);
+    JTextField text6 = new JTextField(10);
     private RegisterFrame() {
         jf = new JFrame("Users Login:");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -201,12 +210,12 @@ class RegisterFrame extends JFrame {
         JLabel label01 = new JLabel();
         label01.setText("");
         label01.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
-        panel01.add(new JTextField(10));
+        panel01.add(text1);
         panel01.add(label01);
         // 第 2 个 JPanel, 使用默认的浮动布局
         JPanel panel02 = new JPanel();
         panel02.add(new JLabel("Password:"));
-        panel02.add(new JPasswordField(10));
+        panel02.add(text2);
         JLabel label02 = new JLabel();
         label02.setText("");
         label02.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
@@ -214,7 +223,7 @@ class RegisterFrame extends JFrame {
 
         JPanel panel03 = new JPanel();
         panel03.add(new JLabel("Student Number:"));
-        panel03.add(new JPasswordField(10));
+        panel03.add(text3);
         JLabel label03 = new JLabel();
         label03.setText("");
         label03.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
@@ -222,7 +231,7 @@ class RegisterFrame extends JFrame {
 
         JPanel panel04 = new JPanel();
         panel04.add(new JLabel("Phone Number:"));
-        panel04.add(new JPasswordField(10));
+        panel04.add(text4);
         JLabel label04 = new JLabel();
         label04.setText("");
         label04.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
@@ -230,7 +239,7 @@ class RegisterFrame extends JFrame {
 
         JPanel panel05 = new JPanel();
         panel05.add(new JLabel("Gender:"));
-        panel05.add(new JPasswordField(10));
+        panel05.add(text5);
         JLabel label05 = new JLabel();
         label05.setText("");
         label05.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
@@ -238,7 +247,8 @@ class RegisterFrame extends JFrame {
 
         JPanel panel06 = new JPanel();
         panel06.add(new JLabel("Birthday:"));
-        panel06.add(new JPasswordField(10));
+        text6.setText("YYYY-MM-DD");
+        panel06.add(text6);
         JLabel label06 = new JLabel();
         label06.setText("");
         label06.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
@@ -279,6 +289,23 @@ class RegisterFrame extends JFrame {
 
     }
 
+    FMPerson getPersonFromText() {
+        FMPerson fmPerson = new FMPerson();
+        fmPerson.setUserName(text1.getText());
+        fmPerson.setPswd(new String(text2.getPassword()));
+        fmPerson.setNumberId(text3.getText());
+        fmPerson.setPhoneNumber(text4.getText());
+        fmPerson.setGender(text5.getText());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+        try{
+            fmPerson.setBirthDate((Date) sdf.parse(text6.getText()));
+        } catch (Exception ex){
+            ex.printStackTrace();
+            RegisterResult.getInstance().setResult("Date Format Error");
+        }
+        return fmPerson;
+    }
+
     static RegisterFrame getInstance() {
         return instance;
     }
@@ -301,14 +328,26 @@ class RegisterFrame extends JFrame {
 class RFActionListener01 implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("aaa");
+        System.out.println("send person to server");
+        FMPerson sendPerson = RegisterFrame.getInstance().getPersonFromText();
+        ClientExecute.getInstance().registerMassageSend(sendPerson);
+        try{
+            String result = ClientConnection.getInstance().getBufferedReader().readLine();
+            RegisterResult.getInstance().setLabel01(result);
+            RegisterResult.getInstance().setResult(result);
+
+        }catch (IOException ioE){
+            ioE.printStackTrace();
+        }
+        RegisterFrame.getInstance().getJf().dispose();
+        RegisterResult.getInstance().getJf().setVisible(true);
     }
 }
 
 class RFActionListener02 implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("aba");
+        System.out.println("return to homepage");
         StartFrame.getInstance().getThisFrame().setVisible(true);
         RegisterFrame.getInstance().getJf().dispose();
     }
@@ -316,17 +355,43 @@ class RFActionListener02 implements ActionListener {
 
 
 class RegisterResult extends JFrame {
-    public RegisterResult() {
-        JFrame jf = new JFrame("RegisterResult");
+    public static RegisterResult instance = new RegisterResult();
+    JLabel label01;
+    //int flag = 2;   //2 means failed, 1 data format error, 0 succeed
+    String result = "failed";
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
+    public void setLabel01(String text) {
+        this.label01.setText(text);
+    }
+
+    private JFrame jf;
+
+    public JFrame getJf() {
+        return jf;
+    }
+
+    public static RegisterResult getInstance() {
+        return instance;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    private RegisterResult() {
+        jf = new JFrame("RegisterResult");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JPanel panel01 = new JPanel();
-        JLabel label01 = new JLabel();
+        label01 = new JLabel();
         JLabel label02 = new JLabel();
         label02.setIcon(new ImageIcon("img/02.jpg"));
         Button button = new Button("OK");
         RRActionListener rrActionListener = new RRActionListener();
         button.addActionListener(rrActionListener);
-        label01.setText("");
         label01.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
         Box vBox = Box.createVerticalBox();
         vBox.add(panel01);
@@ -355,7 +420,16 @@ class RegisterResult extends JFrame {
 class RRActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("aaa");
+        if(RegisterResult.getInstance().getResult().equals("register succeed")){
+            System.out.println("go to homepage");
+            RegisterResult.getInstance().getJf().dispose();
+            HomePage.getInstance().getJf().setVisible(true);
+        } else {
+            System.out.println("return to register");
+            RegisterResult.getInstance().getJf().dispose();
+            RegisterFrame.getInstance().getJf().setVisible(true);
+        }
+
     }
 }
 
@@ -554,7 +628,7 @@ class LRActionListener implements ActionListener {
     }
 }
 
-class HomePage extends JFrame {
+class HomePage extends JFrame {     //TODO: QUERY the person and show on screen
     private JFrame jf;
 
     public JFrame getJf() {
@@ -628,7 +702,7 @@ class HPActionListener01 implements ActionListener {
         ChangeMoney.getInstance().setDeposit(true);
         HomePage.getInstance().getJf().dispose();
         ChangeMoney.getInstance().getJf().setVisible(true);
-        ClientConnection.Send("Change Money");
+        ClientConnection.Send("Change Money\n");
     }
 }
 
@@ -639,7 +713,7 @@ class HPActionListener02 implements ActionListener {
         ChangeMoney.getInstance().setDeposit(false);
         HomePage.getInstance().getJf().dispose();
         ChangeMoney.getInstance().getJf().setVisible(true);
-        ClientConnection.Send("Change Money");
+        ClientConnection.Send("Change Money\n");
     }
 }
 
@@ -649,7 +723,7 @@ class HPActionListener03 implements ActionListener {
         System.out.println("transfer");
         HomePage.getInstance().getJf().dispose();
         TransferAccount.getInstance().getJf().setVisible(true);
-        ClientConnection.Send("Transfer Account");
+        ClientConnection.Send("Transfer Account\n");
     }
 }
 
@@ -659,7 +733,7 @@ class HPActionListener04 implements ActionListener {
         System.out.println("change personal information");
         HomePage.getInstance().getJf().dispose();
         ChangeInformation.getInstance().getJf().setVisible(true);
-        ClientConnection.Send("Change Personal Information");
+        ClientConnection.Send("Change Personal Information\n");
     }
 }
 
