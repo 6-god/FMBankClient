@@ -147,7 +147,6 @@ class SFActionListener01 implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         System.out.println("register");
-        ClientConnection.Send("Login");
         RegisterFrame.getInstance().getJf().setVisible(true);
         StartFrame.getInstance().getThisFrame().dispose();
     }
@@ -159,7 +158,6 @@ class SFActionListener02 implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println("Login frame");
-        ClientConnection.Send("Login\n");
         LoginFrame.getInstance().getJf().setVisible(true);
         StartFrame.getInstance().getThisFrame().dispose();
 
@@ -202,6 +200,7 @@ class RegisterFrame extends JFrame {
     JTextField text4 = new JTextField(10);
     JTextField text5 = new JTextField(10);
     JTextField text6 = new JTextField(10);
+
     private RegisterFrame() {
         jf = new JFrame("Users Login:");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -296,10 +295,11 @@ class RegisterFrame extends JFrame {
         fmPerson.setNumberId(text3.getText());
         fmPerson.setPhoneNumber(text4.getText());
         fmPerson.setGender(text5.getText());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
-        try{
-            fmPerson.setBirthDate((Date) sdf.parse(text6.getText()));
-        } catch (Exception ex){
+        fmPerson.setMoney(2000);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            fmPerson.setBirthDate(sdf.parse(text6.getText()));
+        } catch (Exception ex) {
             ex.printStackTrace();
             RegisterResult.getInstance().setResult("Date Format Error");
         }
@@ -328,15 +328,16 @@ class RegisterFrame extends JFrame {
 class RFActionListener01 implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
+        ClientConnection.Send("Register\n");
         System.out.println("send person to server");
         FMPerson sendPerson = RegisterFrame.getInstance().getPersonFromText();
         ClientExecute.getInstance().registerMassageSend(sendPerson);
-        try{
+        try {
             String result = ClientConnection.getInstance().getBufferedReader().readLine();
             RegisterResult.getInstance().setLabel01(result);
             RegisterResult.getInstance().setResult(result);
 
-        }catch (IOException ioE){
+        } catch (IOException ioE) {
             ioE.printStackTrace();
         }
         RegisterFrame.getInstance().getJf().dispose();
@@ -420,10 +421,12 @@ class RegisterResult extends JFrame {
 class RRActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(RegisterResult.getInstance().getResult().equals("register succeed")){
+        if (RegisterResult.getInstance().getResult().equals("register succeed")) {
             System.out.println("go to homepage");
             RegisterResult.getInstance().getJf().dispose();
+            HomePage.getInstance().refreshHomePage();
             HomePage.getInstance().getJf().setVisible(true);
+
         } else {
             System.out.println("return to register");
             RegisterResult.getInstance().getJf().dispose();
@@ -443,6 +446,7 @@ class LoginFrame extends JFrame {
 
     JTextField username = new JTextField(10);
     JPasswordField password = new JPasswordField(10);
+
     private LoginFrame() {
         jf = new JFrame("LoginFrame");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -490,11 +494,11 @@ class LoginFrame extends JFrame {
         return instance;
     }
 
-    String getUserName(){
+    String getUserName() {
         return username.getText();
     }
 
-    String getPassWord(){
+    String getPassWord() {
         return String.valueOf(password.getPassword());
     }
 
@@ -512,18 +516,19 @@ class LoginFrame extends JFrame {
 class LFActionListener01 implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
+        ClientConnection.Send("Login\n");
         System.out.println("try login");
         String username = LoginFrame.getInstance().getUserName();
         String password = LoginFrame.getInstance().getPassWord();
         String result = null;
         boolean flag = false;
-        ClientExecute.getInstance().loginMessageSend(username,password);
+        ClientExecute.getInstance().loginMessageSend(username, password);
         try {
             result = ClientConnection.getInstance().getBufferedReader().readLine();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        if(result.equals("login succeed")){
+        if (result.equals("login succeed")) {
             flag = true;
             LoginResult.getInstance().setFlag(0);
         }
@@ -549,6 +554,7 @@ class LoginResult extends JFrame {
     private JFrame jf;
 
     private int flag = -1;
+
     public JFrame getJf() {
         return jf;
     }
@@ -558,7 +564,9 @@ class LoginResult extends JFrame {
     public static LoginResult getInstance() {
         return instance;
     }
+
     JLabel label01;
+
     private LoginResult() {
 
         jf = new JFrame("LogicResult");
@@ -589,10 +597,10 @@ class LoginResult extends JFrame {
         this.flag = flag;
     }
 
-    public void setLabel01(){
-        if(flag == 0){
+    public void setLabel01() {
+        if (flag == 0) {
             label01.setText("Login Successfully!");
-        } else{
+        } else {
             label01.setText("Login Failed!");
         }
     }
@@ -615,11 +623,12 @@ class LoginResult extends JFrame {
 class LRActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(LoginResult.getInstance().getFlag()==0){ //login successfully, you will go to home page
+        if (LoginResult.getInstance().getFlag() == 0) { //login successfully, you will go to home page
             System.out.println("home page ");
             LoginResult.getInstance().getJf().dispose();
+            HomePage.getInstance().refreshHomePage();
             HomePage.getInstance().getJf().setVisible(true);
-        }else { //  back to the start menu
+        } else { //  back to the start menu
             System.out.println("start menu");
             LoginResult.getInstance().getJf().dispose();
             StartFrame.getInstance().getThisFrame().setVisible(true);
@@ -641,15 +650,15 @@ class HomePage extends JFrame {     //TODO: QUERY the person and show on screen
         return instance;
     }
 
+    JLabel balanceLabel = new JLabel("UNKNOWN");
     private HomePage() {
         jf = new JFrame("HomePage");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JLabel label02 = new JLabel();
-        label02.setText("account");
-        label02.setFont(new Font(null, Font.PLAIN, 10));  // 设置字体，null 表示使用默认字体
-        JLabel label01 = new JLabel();
-        label01.setText("");
-        label01.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
+        label02.setText("Account Balance:");
+        label02.setFont(new Font(null, Font.PLAIN, 35));  // 设置字体，null 表示使用默认字体
+
+        balanceLabel.setFont(new Font(null, Font.PLAIN, 40));  // 设置字体，null 表示使用默认字体
         Button button1 = new Button("Deposit");     //存款
         Button button2 = new Button("Withdrawal");  //提款
         Button button3 = new Button("Transfer");
@@ -668,9 +677,8 @@ class HomePage extends JFrame {     //TODO: QUERY the person and show on screen
         button5.addActionListener(hpActionListener05);
         Box vBox = Box.createVerticalBox();
 // 创建一个垂直盒子容器, 把上面 6 个 JPanel 串起来作为内容面板添加到窗口
-        vBox.add(label01);
-
         vBox.add(label02);
+        vBox.add(balanceLabel);
         vBox.add(button1);
         vBox.add(button2);
         vBox.add(button3);
@@ -682,6 +690,17 @@ class HomePage extends JFrame {     //TODO: QUERY the person and show on screen
         jf.setVisible(true);
         windowClose(jf);
 
+    }
+
+    void refreshHomePage(){
+        ClientConnection.Send("Personal Homepage\n");
+        FMPerson homepagePerson = ClientExecute.getInstance().personalHomePageReceive();
+        Double moneyNow = homepagePerson.getMoney();
+        setBalanceLabel(moneyNow.toString());
+    }
+
+    void setBalanceLabel(String text){
+        balanceLabel.setText(text);
     }
 
     //抽取关闭监听事件出来
@@ -700,6 +719,7 @@ class HPActionListener01 implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         System.out.println("Deposit");
         ChangeMoney.getInstance().setDeposit(true);
+        ChangeMoney.getInstance().changeLabel(true);
         HomePage.getInstance().getJf().dispose();
         ChangeMoney.getInstance().getJf().setVisible(true);
         ClientConnection.Send("Change Money\n");
@@ -711,6 +731,7 @@ class HPActionListener02 implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         System.out.println("Withdrawal");
         ChangeMoney.getInstance().setDeposit(false);
+        ChangeMoney.getInstance().changeLabel(false);
         HomePage.getInstance().getJf().dispose();
         ChangeMoney.getInstance().getJf().setVisible(true);
         ClientConnection.Send("Change Money\n");
@@ -746,14 +767,15 @@ class HPActionListener05 implements ActionListener {
 }
 
 
-
 class ChangeMoney extends JFrame {
     private boolean deposit;
     JTextField money = new JTextField(25);
+
     public void setDeposit(boolean deposit) {
         this.deposit = deposit;
     }
 
+    JLabel label001;
     private JFrame jf;
 
     public JFrame getJf() {
@@ -771,10 +793,10 @@ class ChangeMoney extends JFrame {
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JPanel panel01 = new JPanel();
         JLabel label01 = new JLabel();
-        JLabel label001 = new JLabel();
-        if(deposit){
+        label001 = new JLabel();
+        if (deposit) {
             label001.setText("Deposit");
-        } else{
+        } else {
             label001.setText("Withdrawal");
         }
 
@@ -803,6 +825,13 @@ class ChangeMoney extends JFrame {
 
     }
 
+    void changeLabel(boolean isDeposit){
+        if(isDeposit){
+            label001.setText("Deposit");
+        } else {
+            label001.setText("Withdrawal");
+        }
+    }
     //抽取关闭监听事件出来
     private static void windowClose(Frame frame) {
         frame.addWindowListener(new WindowAdapter() {
@@ -816,23 +845,25 @@ class ChangeMoney extends JFrame {
     class CMActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Double amount = Math.abs(Double.valueOf(money.getText()));
-            if(!deposit){
-                amount = -1.0 *amount;
+            Double amount = Math.abs(Double.parseDouble(money.getText()));
+            if (!deposit) {
+                amount = -1.0 * amount;
             }
             ClientExecute.getInstance().changeMoneySend(amount);
-            try{
-               String result = ClientConnection.getInstance().getBufferedReader().readLine();
-               if(result.equals("succeed")){
-                   ChangeResult.getInstance().succeed = true;
-               } else{  //  money not enough
-                   ChangeResult.getInstance().succeed = false;
-               }
-               ChangeResult.getInstance().changeLabel();
-               ChangeResult.getInstance().getJf().setVisible(true);
-               ChangeMoney.getInstance().dispose();
+            try {
+                String result = ClientConnection.getInstance().getBufferedReader().readLine();
+                ChangeResult.getInstance();
+                System.out.println(result);
+                if (result.equals("succeed")) {
+                    ChangeResult.getInstance().setSucceed(true);
+                } else {  //  money not enough
+                    ChangeResult.getInstance().setSucceed(false);
+                }
+                ChangeResult.getInstance().changeLabel();
+                ChangeResult.getInstance().getJf().setVisible(true);
+                ChangeMoney.getInstance().getJf().dispose();
 
-            }catch (IOException ex){
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
@@ -840,33 +871,36 @@ class ChangeMoney extends JFrame {
 }
 
 
-
 class ChangeResult extends JFrame {
     private JFrame jf;
     boolean succeed;
-    JLabel label01;
+    JLabel label01 = new JLabel();
+
+    public static  ChangeResult instance = new ChangeResult();
+
+    public void setSucceed(boolean succeed) {
+        this.succeed = succeed;
+    }
+
     public JFrame getJf() {
         return jf;
     }
 
-    private static ChangeResult instance = new ChangeResult();
 
     public static ChangeResult getInstance() {
         return instance;
     }
 
     private ChangeResult() {
-        JFrame jf = new JFrame("ChangeResult");
+        jf = new JFrame("ChangeResult");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JPanel panel01 = new JPanel();
-
-
+        this.changeLabel();
         JLabel label02 = new JLabel();
         label02.setIcon(new ImageIcon("img/05.jpg"));
         Button button = new Button("OK");
         CRActionListener crActionListener = new CRActionListener();
         button.addActionListener(crActionListener);
-        label01.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
         Box vBox = Box.createVerticalBox();
         vBox.add(panel01);
         vBox.add(label01);
@@ -875,17 +909,18 @@ class ChangeResult extends JFrame {
         jf.setContentPane(vBox);
         jf.pack();
         jf.setLocationRelativeTo(null);
-        //jf.setVisible(true);
+        jf.setVisible(true);
         windowClose(jf);
 
     }
 
-    void changeLabel(){
-        if(succeed){
-            label01 = new JLabel("CHANGE MONEY SUCCESSFULLY");
+    void changeLabel() {
+        if (succeed) {
+            label01.setText("CHANGE MONEY SUCCESSFULLY");
         } else {
-            label01 = new JLabel("YOUR MONEY IS NOT ENOUGH");
+            label01.setText("YOUR MONEY IS NOT ENOUGH");
         }
+        label01.setFont(new Font(null, Font.PLAIN, 25));
     }
 
     //抽取关闭监听事件出来
@@ -903,6 +938,7 @@ class CRActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         ChangeResult.getInstance().getJf().dispose();
+        HomePage.getInstance().refreshHomePage();
         HomePage.getInstance().getJf().setVisible(true);
     }
 }
@@ -912,6 +948,7 @@ class TransferAccount extends JFrame {
 
     JTextField toId = new JTextField(10);
     JTextField amount = new JTextField(10);
+
     public JFrame getJf() {
         return jf;
     }
@@ -966,13 +1003,15 @@ class TransferAccount extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("start transfer to server");
-            ClientExecute.getInstance().transferAccountSend(toId.getText(),Math.abs(Double.parseDouble(amount.getText())));
-            try{
+            ClientExecute.getInstance().transferAccountSend(toId.getText(), Math.abs(Double.parseDouble(amount.getText())));
+            try {
                 String result = ClientConnection.getInstance().getBufferedReader().readLine();
+                System.out.println(result);
                 TransferResult.getInstance().setResult(result);
+                TransferResult.getInstance().refreshTransferResult();
                 TransferResult.getInstance().getJf().setVisible(true);
                 TransferAccount.getInstance().getJf().dispose();
-            }catch (IOException ioE){
+            } catch (IOException ioE) {
                 ioE.printStackTrace();
             }
         }
@@ -990,12 +1029,12 @@ class TransferAccount extends JFrame {
 }
 
 
-
 class TAActionListener02 implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println("return homepage");
         TransferAccount.getInstance().getJf().dispose();
+        HomePage.getInstance().refreshHomePage();
         HomePage.getInstance().getJf().setVisible(true);
     }
 }
@@ -1008,7 +1047,7 @@ class TransferResult extends JFrame {
     public void setResult(String result) {
         this.result = result;
     }
-
+    JLabel label01 = new JLabel();
     public JFrame getJf() {
         return jf;
     }
@@ -1023,7 +1062,6 @@ class TransferResult extends JFrame {
         jf = new JFrame("TransferResult ");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JPanel panel01 = new JPanel();
-        JLabel label01 = new JLabel();
         JLabel label02 = new JLabel();
         label02.setIcon(new ImageIcon("img/04.jpg"));
         Button button = new Button("OK");
@@ -1044,6 +1082,10 @@ class TransferResult extends JFrame {
 
     }
 
+    void refreshTransferResult(){
+        label01.setText(result);
+    }
+
     //抽取关闭监听事件出来
     private static void windowClose(Frame frame) {
         frame.addWindowListener(new WindowAdapter() {
@@ -1059,6 +1101,7 @@ class TRActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println("return homepage");
+        HomePage.getInstance().refreshHomePage();
         HomePage.getInstance().getJf().setVisible(true);
         TransferResult.getInstance().getJf().dispose();
     }

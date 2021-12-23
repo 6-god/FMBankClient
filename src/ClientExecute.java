@@ -94,9 +94,10 @@ public class ClientExecute {        //create individual sockets to send differen
         try {
             Socket transferSendSocket = new Socket(serverAddress, 10006);
 //            DataOutputStream transferDOS = new DataOutputStream(transferSendSocket.getOutputStream());
+            System.out.println("toID:" + toId + " Amount:" + amount);
             BufferedWriter transferBufferedWriter = new BufferedWriter(new OutputStreamWriter(transferSendSocket.getOutputStream()));
-            transferBufferedWriter.write(toId);
-            transferBufferedWriter.write(amount.toString());
+            transferBufferedWriter.write(toId+"\n");
+            transferBufferedWriter.write(amount.toString()+"\n");
             transferBufferedWriter.flush();
             transferBufferedWriter.close();
             transferSendSocket.close();
