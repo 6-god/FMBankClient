@@ -4,5 +4,15 @@ public class Main {
 //        ClientConnection.
         GUIFrames guiFrames = GUIFrames.getInstance();
         guiFrames.initialize();
+
+//        RegisterFrame.getInstance().getJf().setVisible(true);
+//        RegisterResult.getInstance().getJf().setVisible(true);
+//        LoginFrame.getInstance().getJf().setVisible(true);
+//        LoginResult.getInstance().getJf().setVisible(true);
+//        HomePage.getInstance().getJf().setVisible(true);
+//        ChangeMoney.getInstance().getJf().setVisible(true);
+//        TransferResult.getInstance().getJf().setVisible(true);
+//        ChangeResult.getInstance().getJf().setVisible(true);
+
     }
 }

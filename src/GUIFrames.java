@@ -78,13 +78,14 @@ class StartFrame extends JFrame {
         JLabel title = new JLabel("Fei Ma Bank");
         Font font = new Font("Times New Roman", Font.PLAIN, 50);
         title.setFont(font);
+        JLabel warn = new JLabel("Warning: You Must Set IP Address Firstly!");
         Button button1 = new Button("Register");
         button1.setSize(100, 5);
         Button button2 = new Button("Login");
         button2.setSize(100, 5);
         Button button3 = new Button("Administrator");
         button3.setSize(100, 5);
-        Button button4 = new Button("Change IP");
+        Button button4 = new Button("Set Your IP Address (Click THIS First!)");
         button3.setSize(100, 5);
         //因为addActionListener需要一个ActionListener，所以就要new一个出来
         SFActionListener01 sfActionListener01 = new SFActionListener01();
@@ -99,6 +100,7 @@ class StartFrame extends JFrame {
         Box vBox = Box.createVerticalBox();
         vBox.add(Box.createVerticalStrut(40));
         vBox.add(title);
+        vBox.add(warn);
         vBox.add(Box.createVerticalStrut(40));
         vBox.add(button1);
         vBox.add(Box.createVerticalStrut(40));
@@ -128,7 +130,7 @@ class StartFrame extends JFrame {
     }
 
 
-    JFrame getThisFrame() {
+    JFrame getJf() {
         return jf;
     }
 
@@ -149,7 +151,7 @@ class SFActionListener01 implements ActionListener {
 
         System.out.println("register");
         RegisterFrame.getInstance().getJf().setVisible(true);
-        StartFrame.getInstance().getThisFrame().dispose();
+        StartFrame.getInstance().getJf().dispose();
     }
 }
 
@@ -160,7 +162,7 @@ class SFActionListener02 implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         System.out.println("Login frame");
         LoginFrame.getInstance().getJf().setVisible(true);
-        StartFrame.getInstance().getThisFrame().dispose();
+        StartFrame.getInstance().getJf().dispose();
 
 
     }
@@ -173,7 +175,7 @@ class SFActionListener03 implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         System.out.println("root");
         ROOTAccount.getInstance().getJf().setVisible(true);
-        StartFrame.getInstance().getThisFrame().dispose();
+        StartFrame.getInstance().getJf().dispose();
 
 
     }
@@ -185,7 +187,7 @@ class SFActionListener04 implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println("change ip");
-        StartFrame.getInstance().getThisFrame().dispose();
+        StartFrame.getInstance().getJf().dispose();
         NoConnectionFrame.getInstance().getJf().setVisible(true);
 
 
@@ -357,7 +359,7 @@ class RFActionListener02 implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println("return to homepage");
-        StartFrame.getInstance().getThisFrame().setVisible(true);
+        StartFrame.getInstance().getJf().setVisible(true);
         RegisterFrame.getInstance().getJf().dispose();
     }
 }
@@ -553,7 +555,7 @@ class LFActionListener02 implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println("return start menu");
-        StartFrame.getInstance().getThisFrame().setVisible(true);
+        StartFrame.getInstance().getJf().setVisible(true);
         LoginFrame.getInstance().getJf().dispose();
     }
 }
@@ -640,7 +642,7 @@ class LRActionListener implements ActionListener {
         } else { //  back to the start menu
             System.out.println("start menu");
             LoginResult.getInstance().getJf().dispose();
-            StartFrame.getInstance().getThisFrame().setVisible(true);
+            StartFrame.getInstance().getJf().setVisible(true);
         }
 
     }
@@ -1503,7 +1505,7 @@ class RAActionListener05 implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println("Back to start frame");
-        StartFrame.getInstance().getThisFrame().setVisible(true);
+        StartFrame.getInstance().getJf().setVisible(true);
         ROOTAccount.getInstance().getJf().dispose();
     }
 }
@@ -1641,7 +1643,8 @@ class NCFListener implements ActionListener {
         ClientConnection.getInstance().setServerIpAddress(NoConnectionFrame.getInstance().getIpaddress());
         ClientConnection.getInstance().initialize();
         NoConnectionFrame.getInstance().getJf().dispose();
-        StartFrame.getInstance().getThisFrame().setVisible(true);
+        StartFrame.getInstance().getJf().setVisible(true);
         GUIFrames.getInstance().setMainSocket(ClientConnection.getInstance().getMainSocket());
     }
+
 }

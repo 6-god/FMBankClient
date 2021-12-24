@@ -15,7 +15,7 @@ public class ClientConnection {     //This class will connect the mainSocket
     }
 
     private ClientConnection() {
-        initialize();
+        //initialize();
     }
 
     void initialize() {             //connect the main socket
