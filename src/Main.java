@@ -2,8 +2,9 @@ public class Main {
     public static void main(String[] args) {
 //        ClientConnection clientConnection = new ClientConnection("39.99.61.152");
 //        ClientConnection.
-        GUIFrames guiFrames = GUIFrames.getInstance();
-        guiFrames.initialize();
+
+//        GUIFrames guiFrames = GUIFrames.getInstance();
+ //       guiFrames.initialize();
 
 //        RegisterFrame.getInstance().getJf().setVisible(true);
 //        RegisterResult.getInstance().getJf().setVisible(true);
@@ -12,7 +13,8 @@ public class Main {
 //        HomePage.getInstance().getJf().setVisible(true);
 //        ChangeMoney.getInstance().getJf().setVisible(true);
 //        TransferResult.getInstance().getJf().setVisible(true);
-//        ChangeResult.getInstance().getJf().setVisible(true);
+//
+        //要让哪个frame显示出来的话，就像上面那样写: xxx.getInstance().getJf().setVisible(true);
 
     }
 }
