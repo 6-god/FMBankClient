@@ -1,3 +1,10 @@
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+
 import javax.crypto.spec.PSource;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -96,8 +103,8 @@ public class ClientExecute {        //create individual sockets to send differen
 //            DataOutputStream transferDOS = new DataOutputStream(transferSendSocket.getOutputStream());
             System.out.println("toID:" + toId + " Amount:" + amount);
             BufferedWriter transferBufferedWriter = new BufferedWriter(new OutputStreamWriter(transferSendSocket.getOutputStream()));
-            transferBufferedWriter.write(toId+"\n");
-            transferBufferedWriter.write(amount.toString()+"\n");
+            transferBufferedWriter.write(toId + "\n");
+            transferBufferedWriter.write(amount.toString() + "\n");
             transferBufferedWriter.flush();
             transferBufferedWriter.close();
             transferSendSocket.close();
@@ -176,7 +183,99 @@ public class ClientExecute {        //create individual sockets to send differen
 
     }
 
-    void exportXlsToLocation(String location, ArrayList<FMPerson> personInXls) {
+    void exportXlsToLocation(ArrayList<FMPerson> personInXls) {
+        //DataOutputStream dOS = new DataOutputStream()
+        try {
+            File file = new File("export.xls");
+            if (file.exists()) {
+                file.delete();  //make sure the old file is deleted
+            }
+            file.createNewFile();   //create a new file to write in
+            WritableWorkbook workbook = Workbook.createWorkbook(new FileOutputStream(file));
+            WritableSheet sheet = workbook.createSheet("sheet1", 0);
+            //创建要显示的内容,创建一个单元格，第一个参数为列坐标，第二个参数为行坐标，第三个参数为内容
+            Label userName = new Label(0, 0, "username");
+            sheet.addCell(userName);
+            Label password = new Label(1, 0, "password");
+            sheet.addCell(password);
+            Label numberId = new Label(2, 0, "number id");
+            sheet.addCell(numberId);
+            Label phoneNumber = new Label(3, 0, "phone number");
+            sheet.addCell(phoneNumber);
+            Label gender = new Label(4, 0, "gender");
+            sheet.addCell(gender);
+            Label birthDate = new Label(5, 0, "birth date");
+            sheet.addCell(birthDate);
+            Label money = new Label(6, 0, "money");
+            sheet.addCell(money);
+            Label id = new Label(7, 0, "id");
+            sheet.addCell(id);
+            int total = personInXls.size();
+            for (int i = 0; i < total; i++) {
+                FMPerson tmp = personInXls.get(i);
+                Label iUserName = new Label(0, i + 1, tmp.getUserName());
+                sheet.addCell(iUserName);
+                Label iPassword = new Label(1, i + 1, tmp.getPswd());
+                sheet.addCell(iPassword);
+                Label iNumberId = new Label(2, i + 1, tmp.getNumberId());
+                sheet.addCell(iNumberId);
+                Label iPhoneNumber = new Label(3, i + 1, tmp.getPhoneNumber());
+                sheet.addCell(iPhoneNumber);
+                Label iGender = new Label(4, i + 1, tmp.getGender());
+                sheet.addCell(iGender);
+                Label iBirthDate = new Label(5, i + 1, tmp.getBirthDate().toString());
+                sheet.addCell(iBirthDate);
+                Label iMoney = new Label(6, i + 1, Double.toString(tmp.getMoney()));
+                sheet.addCell(iMoney);
+                Label iId = new Label(7, i + 1, tmp.getId());
+                sheet.addCell(iId);
+            }
+            workbook.write();
+            workbook.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    ArrayList<FMPerson> importFromXls() {
+        ArrayList<FMPerson> personList = new ArrayList<FMPerson>();
+        try {
+            File file = new File("export.xls");
+            if (!file.exists()) {
+                return personList;
+            }
+            FileInputStream fIS = new FileInputStream(file);
+            jxl.Workbook wb = Workbook.getWorkbook(fIS);
+            Sheet[] sheets = wb.getSheets();
+            for (int i = 1; i < sheets.length; i++) {
+                Sheet rs = wb.getSheet(i);
+                FMPerson tmpPerson = new FMPerson();
+                StringBuilder sB = new StringBuilder();
+                String[] result = new String[10];
+                for(int j = 0;j<8;j++){
+                    Cell[] cells = rs.getRow(j);
+                    for(int k = 0;k< cells.length;k++){
+                        sB.append(cells[k].getContents());
+                    }
+                   result[j] = sB.toString();
+                }
+                tmpPerson.setUserName(result[0]);
+                tmpPerson.setPswd(result[1]);
+                tmpPerson.setNumberId(result[2]);
+                tmpPerson.setPhoneNumber(result[3]);
+                tmpPerson.setGender(result[4]);
+                //tmpPerson.setBirthDate(result[5]); TODO:string to ???.date
+                tmpPerson.setMoney(Double.parseDouble(result[6]));
+                tmpPerson.setId(result[7]);
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return personList;
+        }
 
     }
 
