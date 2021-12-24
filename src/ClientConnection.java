@@ -21,6 +21,7 @@ public class ClientConnection {     //This class will connect the mainSocket
     void initialize() {             //connect the main socket
         try {
             mainSocket = new Socket();
+            //mainSocket.setSoTimeout(1500);
             System.out.println(serverIpAddress);
             InetAddress address = InetAddress.getByName(serverIpAddress);
             InetSocketAddress socketAddress = new InetSocketAddress(address, 10001);

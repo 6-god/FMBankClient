@@ -1,3 +1,6 @@
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -5,13 +8,14 @@ import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 
-import javax.crypto.spec.PSource;
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+//import javax.crypto.spec.PSource;
+//import javax.swing.*;
+//import java.awt.event.ActionEvent;
+//import java.awt.event.ActionListener;
 import java.io.*;
-import java.net.ServerSocket;
+//import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
@@ -23,7 +27,7 @@ public class ClientExecute {        //create individual sockets to send differen
     public static ClientExecute instance = new ClientExecute();     //only one instance in a program
 
     private ClientExecute() {
-        //serverAddress = "localhost";     //Not Done: this address should be input by users
+        //serverAddress = "localhost";     //TODO: this address should be input by users (done
         ClientConnection.getInstance();
         //mainSocket = clientConnection.getMainSocket();
     }
@@ -114,23 +118,26 @@ public class ClientExecute {        //create individual sockets to send differen
 
     }
 
-    void changePersonalInformation() {      //send a String(button that user choose) firstly, then a String or a Date Object
-        String chooseMode = null;
+    void changePersonalInformation(String changeValue) {      //send a String(button that user choose) firstly, then a String or a Date Object
+        //String chooseMode = null;
         try {
             Socket changeInformationSocket = new Socket(serverAddress, 10007);
             BufferedWriter changeInformationBufferedWriter = new BufferedWriter(new OutputStreamWriter(changeInformationSocket.getOutputStream()));
-            while (chooseMode == null) {
+            //while (chooseMode == null) {
                 //chooseMode = getMethod in GUI
                 //sleep for a while if can
-            }
+            //}
 
-            changeInformationBufferedWriter.write(chooseMode);
+            //changeInformationBufferedWriter.write(chooseMode);
 
-            if (!chooseMode.equals("birth_date")) {
+            //if (!chooseMode.equals("birth_date")) {
                 //get and send a String
-            } else {
+            //} else {
                 //send the Date
-            }
+            //}
+            changeInformationBufferedWriter.write(changeValue);
+            changeInformationBufferedWriter.flush();
+            changeInformationSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -151,17 +158,24 @@ public class ClientExecute {        //create individual sockets to send differen
     }
 
     ArrayList<FMPerson> receivePerson() {       //receive ArrayList<FMPerson>
+        ArrayList<FMPerson> tmpList = new ArrayList<FMPerson>();
         try {
             Socket receivePersonSocket = new Socket(serverAddress, 10009);
             DataInputStream personDIS = new DataInputStream(receivePersonSocket.getInputStream());
-            ObjectInputStream personOIS = new ObjectInputStream(personDIS);
-            return (ArrayList<FMPerson>) personOIS.readObject();
+            BufferedInputStream personBIS = new BufferedInputStream(personDIS);
+            ObjectInputStream personOIS = new ObjectInputStream(personBIS);
+            tmpList = (ArrayList<FMPerson>) personOIS.readObject();
+//            for(int i = 0; i < tmpList.size();i++){
+//                tmpList.get(i).printOnePerson();
+//            }
+            if (tmpList == null) {
+                tmpList = new ArrayList<FMPerson>();
+            }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-        } finally {
-
-            return null;
         }
+        return tmpList;
+
     }
 
     ArrayList<Double> receivePdfReport() {  //receive Arraylist<Double>
@@ -176,17 +190,59 @@ public class ClientExecute {        //create individual sockets to send differen
     }
 
 
-    void exportPdfToLocation(String location) {
-        if (location == null) {
-
+    void exportPdfToLocation(ArrayList<Double> pdfDouble) {
+        System.out.println("total users:"+ pdfDouble.get(0));
+        System.out.println("total money:" +pdfDouble.get(1));
+        File file = new File("report.pdf");
+        if(file.exists()){
+            file.delete();
         }
+        try{
+            file.createNewFile();
+            Rectangle tRectangle = new Rectangle(PageSize.A4);
+            tRectangle.setBackgroundColor(BaseColor.WHITE);
+            tRectangle.setBorder(2000);
+            tRectangle.setBorderColor(BaseColor.RED);
+            tRectangle.setBorderWidth(244.2f);
+            com.itextpdf.text.Document doc = new Document(tRectangle);
+            //doc = new Document(tRectangle.rotate());
+            PdfWriter writer = PdfWriter.getInstance(doc,new FileOutputStream(file));
+            doc.open();
+            //writer.setPdfVersion(PdfWriter.VERSION_1_2);
+            doc.addTitle("FINANCIAL REPORT (se)");
+            doc.addAuthor("Fei Ma Bank");
+            Paragraph tParagraph1 = new Paragraph("OUR TOTAL USERS ARE:",FontFactory.getFont(FontFactory.TIMES_ROMAN, 40,Font.NORMAL, BaseColor.BLACK));
+            Paragraph tParagraph2 = new Paragraph(  String.valueOf(Math.floor(pdfDouble.get(0)))+"!!",FontFactory.getFont(FontFactory.TIMES_ROMAN, 55,Font.NORMAL, BaseColor.RED));
+            Paragraph tParagraph3 = new Paragraph("THE MONEY IN OUR BANK ARE TOTALLY:",FontFactory.getFont(FontFactory.TIMES_ROMAN, 40,Font.NORMAL, BaseColor.BLACK));
+            Paragraph tParagraph4 = new Paragraph(pdfDouble.get(1).toString()+" $!!",FontFactory.getFont(FontFactory.TIMES_ROMAN, 55,Font.NORMAL, BaseColor.RED));
+            Paragraph tParagraph5 = new Paragraph("THAT IS AMAZING!!!",FontFactory.getFont(FontFactory.TIMES_ROMAN, 25,Font.NORMAL, BaseColor.BLACK));
+            tParagraph1.setAlignment(Element.ALIGN_CENTER);
+            tParagraph2.setAlignment(Element.ALIGN_CENTER);
+            tParagraph3.setAlignment(Element.ALIGN_CENTER);
+            tParagraph4.setAlignment(Element.ALIGN_CENTER);
+            tParagraph5.setAlignment(Element.ALIGN_CENTER);
+            doc.add(tParagraph1);
+            doc.add(tParagraph2);
+            doc.add(tParagraph3);
+            doc.add(tParagraph4);
+            doc.add(tParagraph5);
+            doc.close();
 
+            //PdfPTable table = new PdfPTable(1);
+            //table.setKeepTogether(true);
+            //table.setSplitLate(false);
+
+            //PdfPTable tavle
+
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 
     void exportXlsToLocation(ArrayList<FMPerson> personInXls) {
         //DataOutputStream dOS = new DataOutputStream()
         try {
-            File file = new File("export.xls");
+            File file = new File("users.xls");
             if (file.exists()) {
                 file.delete();  //make sure the old file is deleted
             }
@@ -213,6 +269,7 @@ public class ClientExecute {        //create individual sockets to send differen
             int total = personInXls.size();
             for (int i = 0; i < total; i++) {
                 FMPerson tmp = personInXls.get(i);
+                tmp.printOnePerson();
                 Label iUserName = new Label(0, i + 1, tmp.getUserName());
                 sheet.addCell(iUserName);
                 Label iPassword = new Label(1, i + 1, tmp.getPswd());
@@ -241,33 +298,47 @@ public class ClientExecute {        //create individual sockets to send differen
     ArrayList<FMPerson> importFromXls() {
         ArrayList<FMPerson> personList = new ArrayList<FMPerson>();
         try {
-            File file = new File("export.xls");
+            File file = new File("users.xls");
             if (!file.exists()) {
+                System.out.println("file cannot found");
                 return personList;
             }
-            FileInputStream fIS = new FileInputStream(file);
-            jxl.Workbook wb = Workbook.getWorkbook(fIS);
-            Sheet[] sheets = wb.getSheets();
-            for (int i = 1; i < sheets.length; i++) {
-                Sheet rs = wb.getSheet(i);
+            //FileInputStream fIS = new FileInputStream(file);
+            jxl.Workbook wb = Workbook.getWorkbook(file);
+            Sheet rs = wb.getSheet(0);
+            int i = 0;
+            while (true) {
+                i++;
                 FMPerson tmpPerson = new FMPerson();
-                StringBuilder sB = new StringBuilder();
                 String[] result = new String[10];
-                for(int j = 0;j<8;j++){
-                    Cell[] cells = rs.getRow(j);
-                    for(int k = 0;k< cells.length;k++){
-                        sB.append(cells[k].getContents());
-                    }
-                   result[j] = sB.toString();
+                Cell[] cells;
+                //for (int j = 0; j < 8; j++) {
+                try{
+                    cells = rs.getRow(i);
+                } catch (ArrayIndexOutOfBoundsException exception){
+                    //exception.printStackTrace();
+                    break;
                 }
+                for (int k = 0; k < cells.length; k++) {
+                    StringBuilder sB = new StringBuilder();
+                    sB.append(cells[k].getContents());
+                    result[k] = sB.toString();
+
+                }
+                //}
                 tmpPerson.setUserName(result[0]);
                 tmpPerson.setPswd(result[1]);
                 tmpPerson.setNumberId(result[2]);
                 tmpPerson.setPhoneNumber(result[3]);
                 tmpPerson.setGender(result[4]);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                tmpPerson.setBirthDate(sdf.parse(result[5]));
                 //tmpPerson.setBirthDate(result[5]); TODO:string to ???.date
                 tmpPerson.setMoney(Double.parseDouble(result[6]));
                 tmpPerson.setId(result[7]);
+                tmpPerson.printOnePerson();
+                if (tmpPerson.getUserName() == null) break;
+                personList.add(tmpPerson);
 
             }
 
