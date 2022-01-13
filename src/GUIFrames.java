@@ -46,20 +46,20 @@ public class GUIFrames {
         return ClientConnection.getInstance().getMainSocket().isConnected();
     }
     //public static void main(String[] args) {
-    //new RegisterFrame();
-    //new RegisterResult();
-    //new LogicResult();
-    //new LoginFrame();
-    //new HomePage();
-    //new ChangeMoney();
-    //new TransferAccount();
-    //new ChangeResult();
-    //new TransferResult();
-    //new ChangeInformationSelection();
-    //new ChangeInformation();
-    //new ChangeInformationResult();
-    //new ROOTAccount();
-    //}
+            //new RegisterFrame();
+            //new RegisterResult();
+            //new LogicResult();
+            //new LoginFrame();
+            //new HomePage();
+            //new ChangeMoney();
+            //new TransferAccount();
+            //new ChangeResult();
+            //new TransferResult();
+            //new ChangeInformationSelection();
+            //new ChangeInformation();
+            //new ChangeInformationResult();
+            //new ROOTAccount();
+   // }
 
 
     public void setMainSocket(Socket mainSocket) {
@@ -75,18 +75,32 @@ class StartFrame extends JFrame {
     private StartFrame() {
         jf = new JFrame("StartFrame");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        JLabel title = new JLabel("Fei Ma Bank");
+        ImageIcon ii = new ImageIcon("img/00.jpg");
+        Font font1 = new Font("Times New Roman", Font.PLAIN, 20);
+        //ii.setImage(ii.getImage().getScaledInstance(100, 30,Image.SCALE_DEFAULT));
+        JLabel title = new JLabel(ii);
+        title.setText("Fei Ma Bank");
+        JPanel panel01 = new JPanel();
+        panel01.add(title);
         Font font = new Font("Times New Roman", Font.PLAIN, 50);
+        title.setHorizontalAlignment(SwingConstants.CENTER);
         title.setFont(font);
         JLabel warn = new JLabel("Warning: You Must Set IP Address Firstly!");
+        JPanel panel02 = new JPanel();
+        panel02.add(warn);
+        warn.setHorizontalAlignment(SwingConstants.CENTER);
         Button button1 = new Button("Register");
-        button1.setSize(100, 5);
+        button1.setSize(100, 10);
+        button1.setFont(font1);
         Button button2 = new Button("Login");
-        button2.setSize(100, 5);
+        button2.setFont(font1);
+        button2.setSize(100, 10);
         Button button3 = new Button("Administrator");
-        button3.setSize(100, 5);
+        button3.setSize(100, 10);
+        button3.setFont(font1);
         Button button4 = new Button("Set Your IP Address (Click THIS First!)");
-        button3.setSize(100, 5);
+        button3.setSize(100, 10);
+        button4.setFont(font1);
         //因为addActionListener需要一个ActionListener，所以就要new一个出来
         SFActionListener01 sfActionListener01 = new SFActionListener01();
         button1.addActionListener(sfActionListener01);
@@ -99,16 +113,17 @@ class StartFrame extends JFrame {
         button4.addActionListener(sfActionListener04);
         Box vBox = Box.createVerticalBox();
         vBox.add(Box.createVerticalStrut(40));
-        vBox.add(title);
-        vBox.add(warn);
+        vBox.add(panel01);
         vBox.add(Box.createVerticalStrut(40));
-        vBox.add(button1);
+        vBox.add(panel02);
+        vBox.add(Box.createVerticalStrut(40));
+        vBox.add(button4);
         vBox.add(Box.createVerticalStrut(40));
         vBox.add(button2);
         vBox.add(Box.createVerticalStrut(40));
         vBox.add(button3);
         vBox.add(Box.createVerticalStrut(40));
-        vBox.add(button4);
+        vBox.add(button1);
         vBox.add(Box.createVerticalStrut(40));
         Box baseBox = Box.createHorizontalBox();
         baseBox.add(Box.createHorizontalStrut(30));
@@ -119,7 +134,7 @@ class StartFrame extends JFrame {
         jf.pack();
         jf.setLocationRelativeTo(null);
         jf.setSize(150, 300);
-        jf.setBounds(400, 300, 500, 500);
+        jf.setBounds(400, 300, 700, 700);
         jf.setVisible(true);
         windowClose(jf);
 
@@ -207,18 +222,21 @@ class RegisterFrame extends JFrame {
     private RegisterFrame() {
         jf = new JFrame("Users Login:");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        Font font = new Font("Times New Roman", Font.PLAIN, 15);
         JPanel panel01 = new JPanel();
         panel01.add(new JLabel("User Name:          "));
         JLabel label01 = new JLabel();
         label01.setText("(your user name cannot be duplicate with others)");
+        label01.setFont(font);
         //label01.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
         panel01.add(text1);
         panel01.add(label01);
         // 第 2 个 JPanel, 使用默认的浮动布局
         JPanel panel02 = new JPanel();
-        panel02.add(new JLabel("Password:           "));
+        panel02.add(new JLabel("Password:            "));
         panel02.add(text2);
         JLabel label02 = new JLabel();
+        label02.setFont(font);
         label02.setText("(make sure you remember it)");
         //label02.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
         panel02.add(label02);
@@ -228,6 +246,7 @@ class RegisterFrame extends JFrame {
         panel03.add(new JLabel("Student Number: "));
         panel03.add(text3);
         JLabel label03 = new JLabel();
+        label03.setFont(font);
         label03.setText("(input your student number)");
         //label03.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
         panel03.add(label03);
@@ -236,14 +255,16 @@ class RegisterFrame extends JFrame {
         panel04.add(new JLabel("Phone Number:   "));
         panel04.add(text4);
         JLabel label04 = new JLabel();
+        label04.setFont(font);
         label04.setText("(input your phone number)");
         //label04.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
         panel04.add(label04);
 
         JPanel panel05 = new JPanel();
-        panel05.add(new JLabel("Gender:                 "));
+        panel05.add(new JLabel("Gender:                "));
         panel05.add(text5);
         JLabel label05 = new JLabel();
+        label05.setFont(font);
         label05.setText("(input 0 for female, 1 for male)");
         //label05.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
         panel05.add(label05);
@@ -253,6 +274,7 @@ class RegisterFrame extends JFrame {
         text6.setText("YYYY-MM-DD");
         panel06.add(text6);
         JLabel label06 = new JLabel();
+        label06.setFont(font);
         label06.setText("(input format is YYYY-MM-DD)");
         //label06.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
         panel06.add(label06);
@@ -265,7 +287,11 @@ class RegisterFrame extends JFrame {
         panel06.setLayout(new FlowLayout(FlowLayout.LEFT));
 
         Button button1 = new Button("REGISTER");
+        button1.setSize(100, 5);
+        button1.setFont(new Font("宋体", Font.PLAIN, 15));
         Button button2 = new Button("RETURN");
+        button2.setSize(100, 5);
+        button2.setFont(new Font("宋体", Font.PLAIN, 15));
         //因为addActionListener需要一个ActionListener，所以就要new一个出来
         RFActionListener01 rfActionListener01 = new RFActionListener01();
         button1.addActionListener(rfActionListener01);
@@ -287,16 +313,19 @@ class RegisterFrame extends JFrame {
         vBox.add(panel06);
         vBox.add(Box.createVerticalStrut(20));
         vBox.add(button1);
-
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button2);
-
-        jf.setContentPane(vBox);
+        vBox.add(Box.createVerticalStrut(20));
+        Box baseBox = Box.createHorizontalBox();
+        baseBox.add(Box.createHorizontalStrut(30));
+        baseBox.add(vBox);
+        baseBox.add(Box.createHorizontalStrut(30));
+        jf.setContentPane(baseBox);
         jf.setSize(1000, 1000);
         jf.pack();
         jf.setLocationRelativeTo(null);
         jf.setVisible(true);
         windowClose(jf);
-
     }
 
     FMPerson getPersonFromText() {
@@ -396,21 +425,38 @@ class RegisterResult extends JFrame {
     private RegisterResult() {
         jf = new JFrame("RegisterResult");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        jf = new JFrame("RegisterResult");
         JPanel panel01 = new JPanel();
         //label01 = new JLabel();
+        panel01.add(label01);
         JLabel label02 = new JLabel();
-        label02.setIcon(new ImageIcon("img/02.jpg"));
+        ImageIcon ii = new ImageIcon("img/02.png");
+        ii.setImage(ii.getImage().getScaledInstance(200, 355,Image.SCALE_SMOOTH));
+        label02.setIcon(ii);
+        JPanel panel02 = new JPanel();
+        //label01 = new JLabel();
+        panel02.add(label02);
         Button button = new Button("OK");
+        button.setFont(new Font("宋体", Font.PLAIN, 15));
+        button.setSize(100, 5);
         RRActionListener rrActionListener = new RRActionListener();
         button.addActionListener(rrActionListener);
-        label01.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
+        label01.setFont(new Font("宋体", Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
+        label01.setHorizontalAlignment(SwingConstants.CENTER);
+        label02.setHorizontalAlignment(SwingConstants.CENTER);
         Box vBox = Box.createVerticalBox();
+        vBox.add(Box.createVerticalStrut(40));
         vBox.add(panel01);
-        vBox.add(label01);
-        vBox.add(label02);
+        vBox.add(Box.createVerticalStrut(40));
+        vBox.add(panel02);
+        vBox.add(Box.createVerticalStrut(40));
         vBox.add(button);
-
-        jf.setContentPane(vBox);
+        vBox.add(Box.createVerticalStrut(40));
+        Box baseBox = Box.createHorizontalBox();
+        baseBox.add(Box.createHorizontalStrut(30));
+        baseBox.add(vBox);
+        baseBox.add(Box.createHorizontalStrut(35));
+        jf.setContentPane(baseBox);
         jf.pack();
         jf.setLocationRelativeTo(null);
         jf.setVisible(true);
@@ -461,27 +507,43 @@ class LoginFrame extends JFrame {
     private LoginFrame() {
         jf = new JFrame("LoginFrame");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        Font font = new Font("Times New Roman", Font.PLAIN, 20);
         JPanel panel01 = new JPanel();
         JLabel label01 = new JLabel();
+        label01.setFont(font);
         JLabel label001 = new JLabel();
-        label001.setText("user name");
+        label001.setFont(font);
+        label001.setText("User Name");
         panel01.add(label001);
-        label01.setText("example: user2");
+        label01.setText("example: user3");
         //label01.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
         panel01.add(username);
         panel01.add(label01);
         // 第 2 个 JPanel, 使用默认的浮动布局
         JPanel panel02 = new JPanel();
         JLabel label002 = new JLabel();
-        label002.setText("password");
+        label002.setFont(font);
+        label002.setText("Password   ");
         panel02.add(label002);
         panel02.add(password);
         JLabel label02 = new JLabel();
-        label02.setText("example: pswd2");
+        label02.setFont(font);
+        label02.setText("example: pswd3");
         //label02.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
         panel02.add(label02);
-        Button button1 = new Button("log");
-        Button button2 = new Button("return");
+        JLabel label03 = new JLabel();
+        ImageIcon ii = new ImageIcon("img/08.jpg");
+        ii.setImage(ii.getImage().getScaledInstance(200, 125,Image.SCALE_SMOOTH));
+        label03.setIcon(ii);
+        JPanel panel03 = new JPanel();
+        //label01 = new JLabel();
+        panel03.add(label03);
+        Button button1 = new Button("Login");
+        button1.setFont(font);
+        button1.setSize(100, 5);
+        Button button2 = new Button("Return");
+        button2.setFont(font);
+        button2.setSize(100, 5);
         //因为addActionListener需要一个ActionListener，所以就要new一个出来
         LFActionListener01 lfActionListener01 = new LFActionListener01();
         button1.addActionListener(lfActionListener01);
@@ -489,11 +551,22 @@ class LoginFrame extends JFrame {
         button2.addActionListener(lfActionListener02);
         // 创建一个垂直盒子容器, 把上面 6 个 JPanel 串起来作为内容面板添加到窗口
         Box vBox = Box.createVerticalBox();
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(panel01);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(panel02);
+        vBox.add(Box.createVerticalStrut(20));
+        vBox.add(panel03);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button1);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button2);
-        jf.setContentPane(vBox);
+        vBox.add(Box.createVerticalStrut(20));
+        Box baseBox = Box.createHorizontalBox();
+        baseBox.add(Box.createHorizontalStrut(30));
+        baseBox.add(vBox);
+        baseBox.add(Box.createHorizontalStrut(30));
+        jf.setContentPane(baseBox);
         jf.pack();
         jf.setLocationRelativeTo(null);
         jf.setVisible(true);
@@ -580,25 +653,45 @@ class LoginResult extends JFrame {
 
     private LoginResult() {
 
-        jf = new JFrame("LogicResult");
+        jf = new JFrame("LoginResult");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JPanel panel01 = new JPanel();
         label01 = new JLabel();
+        panel01.add(label01);
+        label01.setHorizontalAlignment(SwingConstants.CENTER);
+        label01.setFont(new Font("Times New Roman", Font.PLAIN, 15));
         JLabel label02 = new JLabel();
-        label02.setIcon(new ImageIcon("img/01.jpg"));
+        ImageIcon ii = new ImageIcon("img/01.png");
+        ii.setImage(ii.getImage().getScaledInstance(200, 260,Image.SCALE_SMOOTH));
+        label02.setIcon(ii);
+        JPanel panel02 = new JPanel();
+        //label01 = new JLabel();
+        panel02.add(label02);
+        label02.setHorizontalAlignment(SwingConstants.CENTER);
         Button button = new Button("OK");
+        button.setSize(100, 5);
+        button.setFont(new Font(null, Font.PLAIN, 15));
         LRActionListener lrActionListener = new LRActionListener();
         button.addActionListener(lrActionListener);
-
-        label01.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
+        label01.setFont(new Font("宋体", Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
         Box vBox = Box.createVerticalBox();
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(panel01);
-        vBox.add(label01);
-        vBox.add(label02);
+        vBox.add(Box.createVerticalStrut(20));
+
+        vBox.add(panel02);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button);
-        jf.setContentPane(vBox);
+        vBox.add(Box.createVerticalStrut(20));
+        Box baseBox = Box.createHorizontalBox();
+        baseBox.add(Box.createHorizontalStrut(30));
+        baseBox.add(vBox);
+        baseBox.add(Box.createHorizontalStrut(30));
+        jf.setContentPane(baseBox);
         jf.pack();
         jf.setLocationRelativeTo(null);
+        //jf.setBounds(30,,300,400);
+        jf.setSize(400,500);
         jf.setVisible(true);
         windowClose(jf);
 
@@ -666,16 +759,39 @@ class HomePage extends JFrame {     //TODO: QUERY the person and show on screen 
     private HomePage() {
         jf = new JFrame("HomePage");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        JPanel panel01 = new JPanel();
+        panel01.add(balanceLabel);
+        balanceLabel.setHorizontalAlignment(SwingConstants.CENTER);
         JLabel label02 = new JLabel();
+        JPanel panel02 = new JPanel();
+        panel02.add(label02);
         label02.setText("Account Balance:");
-        label02.setFont(new Font(null, Font.PLAIN, 35));  // 设置字体，null 表示使用默认字体
-
-        balanceLabel.setFont(new Font(null, Font.PLAIN, 40));  // 设置字体，null 表示使用默认字体
+        label02.setHorizontalAlignment(SwingConstants.CENTER);
+        label02.setFont(new Font("Times New Roman", Font.PLAIN, 35));  // 设置字体，null 表示使用默认字体
+        balanceLabel.setFont(new Font("Times New Roman", Font.PLAIN, 40));  // 设置字体，null 表示使用默认字体
         Button button1 = new Button("Deposit");     //存款
         Button button2 = new Button("Withdrawal");  //提款
         Button button3 = new Button("Transfer");
         Button button4 = new Button("Modify personal information");
         Button button5 = new Button("log out");
+        JLabel label03 = new JLabel();
+        ImageIcon ii = new ImageIcon("img/15.jpg");
+        ii.setImage(ii.getImage().getScaledInstance(200, 126,Image.SCALE_SMOOTH));
+        label03.setIcon(ii);
+        JPanel panel03 = new JPanel();
+        //label01 = new JLabel();
+        panel03.add(label03);
+        Font font = new Font("宋体", Font.PLAIN, 15);
+        button1.setSize(100, 5);
+        button2.setSize(100, 5);
+        button3.setSize(100, 5);
+        button4.setSize(100, 5);
+        button5.setSize(100, 5);
+        button1.setFont(font);
+        button2.setFont(font);
+        button3.setFont(font);
+        button4.setFont(font);
+        button5.setFont(font);
         //因为addActionListener需要一个ActionListener，所以就要new一个出来
         HPActionListener01 hpActionListener01 = new HPActionListener01();
         button1.addActionListener(hpActionListener01);
@@ -689,14 +805,29 @@ class HomePage extends JFrame {     //TODO: QUERY the person and show on screen 
         button5.addActionListener(hpActionListener05);
         Box vBox = Box.createVerticalBox();
 // 创建一个垂直盒子容器, 把上面 6 个 JPanel 串起来作为内容面板添加到窗口
-        vBox.add(label02);
-        vBox.add(balanceLabel);
+        vBox.add(Box.createVerticalStrut(20));
+        vBox.add(panel02);
+        vBox.add(Box.createVerticalStrut(20));
+        vBox.add(panel01);
+        vBox.add(Box.createVerticalStrut(20));
+        vBox.add(panel03);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button1);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button2);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button3);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button4);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button5);
-        jf.setContentPane(vBox);
+        vBox.add(Box.createVerticalStrut(20));
+        Box baseBox = Box.createHorizontalBox();
+        baseBox.add(Box.createHorizontalStrut(30));
+        baseBox.add(vBox);
+        baseBox.add(Box.createHorizontalStrut(30));
+        jf.setContentPane(baseBox);
+
         jf.pack();
         jf.setLocationRelativeTo(null);
         jf.setVisible(true);
@@ -805,30 +936,49 @@ class ChangeMoney extends JFrame {
         JPanel panel01 = new JPanel();
         JLabel label01 = new JLabel();
         label001 = new JLabel();
-        if (deposit) {
-            label001.setText("Deposit");
-        } else {
-            label001.setText("Withdrawal");
-        }
 
+        if (deposit) {
+            label001.setText("         Deposit");
+        } else {
+            label001.setText("         Withdrawal");
+        }
         panel01.add(label01);
         panel01.add(label001);
-        label01.setText("please enter the amount");
-        label001.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
+        label01.setText("please enter the amount               ");
+        label01.setFont(new Font("Times New Roman",Font.PLAIN, 25));
+        label001.setFont(new Font("Times New Roman", Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
         panel01.add(money);
         JLabel label02 = new JLabel();
-        label02.setIcon(new ImageIcon("img/03.jpg"));
+        ImageIcon ii = new ImageIcon("img/03.png");
+        ii.setImage(ii.getImage().getScaledInstance(200, 281,Image.SCALE_SMOOTH));
+        label02.setIcon(ii);
+        JPanel panel02 = new JPanel();
+        //label01 = new JLabel();
+        panel02.add(label02);
+        label02.setHorizontalAlignment(SwingConstants.CENTER);
         Button button = new Button("OK");
+        button.setSize(100, 20);
+        button.setFont(new Font("宋体",Font.PLAIN, 15));
         //因为addActionListener需要一个ActionListener，所以就要new一个出来
         CMActionListener cmActionListener = new CMActionListener();
         button.addActionListener(cmActionListener);
         Box vBox = Box.createVerticalBox();
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(label001);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(label01);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(panel01);
-        vBox.add(label02);
+        vBox.add(Box.createVerticalStrut(20));
+        vBox.add(panel02);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button);
-        jf.setContentPane(vBox);
+        vBox.add(Box.createVerticalStrut(20));
+        Box baseBox = Box.createHorizontalBox();
+        baseBox.add(Box.createHorizontalStrut(30));
+        baseBox.add(vBox);
+        baseBox.add(Box.createHorizontalStrut(30));
+        jf.setContentPane(baseBox);
         jf.pack();
         jf.setLocationRelativeTo(null);
         jf.setVisible(true);
@@ -907,23 +1057,42 @@ class ChangeResult extends JFrame {
         jf = new JFrame("ChangeResult");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JPanel panel01 = new JPanel();
+        panel01.add(label01);
+        Font font = new Font("Times New Roman", Font.PLAIN, 12);
+        label01.setHorizontalAlignment(SwingConstants.CENTER);
+        label01.setFont(font);
         this.changeLabel();
         JLabel label02 = new JLabel();
-        label02.setIcon(new ImageIcon("img/05.jpg"));
+        ImageIcon ii = new ImageIcon("img/09.jpg");
+        ii.setImage(ii.getImage().getScaledInstance(200, 270,Image.SCALE_SMOOTH));
+        label02.setIcon(ii);
+        JPanel panel02 = new JPanel();
+        //label01 = new JLabel();
+        panel02.add(label02);
+        label02.setHorizontalAlignment(SwingConstants.CENTER);
         Button button = new Button("OK");
+        button.setSize(100, 5);
+        button.setFont(new Font("宋体",Font.PLAIN, 15));
         CRActionListener crActionListener = new CRActionListener();
         button.addActionListener(crActionListener);
         Box vBox = Box.createVerticalBox();
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(panel01);
-        vBox.add(label01);
-        vBox.add(label02);
+        vBox.add(Box.createVerticalStrut(20));
+        vBox.add(panel02);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button);
-        jf.setContentPane(vBox);
+        vBox.add(Box.createVerticalStrut(20));
+        Box baseBox = Box.createHorizontalBox();
+        baseBox.add(Box.createHorizontalStrut(30));
+        baseBox.add(vBox);
+        baseBox.add(Box.createHorizontalStrut(30));
+        jf.setContentPane(baseBox);
         jf.pack();
         jf.setLocationRelativeTo(null);
+        jf.setSize(750, 500);
         jf.setVisible(true);
         windowClose(jf);
-
     }
 
     void changeLabel() {
@@ -958,8 +1127,8 @@ class CRActionListener implements ActionListener {
 class TransferAccount extends JFrame {
     private JFrame jf;
 
-    JTextField toId = new JTextField(10);
-    JTextField amount = new JTextField(10);
+    JTextField toId = new JTextField(20);
+    JTextField amount = new JTextField(20);
 
     public JFrame getJf() {
         return jf;
@@ -976,10 +1145,13 @@ class TransferAccount extends JFrame {
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JPanel panel01 = new JPanel();
         JLabel label01 = new JLabel();
-        label01.setText("transfer account               ");
-        label01.setFont(new Font(null, Font.PLAIN, 25));
+        label01.setText("transfer account                  ");
+        label01.setFont(new Font("Times New Roman", Font.PLAIN, 25));
+        Font font = new Font("Times New Roman", Font.PLAIN, 15);
         JLabel label001 = new JLabel();
-        label001.setText("UserId You Want To Transferred To:");
+        label001.setHorizontalAlignment(SwingConstants.CENTER);
+        label001.setFont(font);
+        label001.setText("UserId You Want To Transferred To:       ");
         panel01.add(label01);
         panel01.add(label001);
         panel01.add(toId);
@@ -988,26 +1160,54 @@ class TransferAccount extends JFrame {
         JLabel label002 = new JLabel();
         label002.setText("Money Amount:(must be positive number)");
         panel02.add(label002);
+        label002.setHorizontalAlignment(SwingConstants.CENTER);
+        label002.setFont(font);
         panel02.add(amount);
+        JLabel label03 = new JLabel();
+        ImageIcon ii = new ImageIcon("img/10.jpg");
+        ii.setImage(ii.getImage().getScaledInstance(200, 284,Image.SCALE_SMOOTH));
+        label03.setIcon(ii);
+        JPanel panel03 = new JPanel();
+        //label01 = new JLabel();
+        panel03.add(label03);
+        label03.setHorizontalAlignment(SwingConstants.CENTER);
         Button button1 = new Button("OK");
         Button button2 = new Button("RETURN");
         //因为addActionListener需要一个ActionListener，所以就要new一个出来
         TAActionListener01 taActionListener01 = new TAActionListener01();
         button1.addActionListener(taActionListener01);
+        button1.setSize(100, 5);
+        button1.setFont(new Font("宋体",Font.PLAIN, 15));
         TAActionListener02 taActionListener02 = new TAActionListener02();
         button2.addActionListener(taActionListener02);
+        button2.setSize(100, 5);
+        button2.setFont(new Font("宋体",Font.PLAIN, 15));
         // 创建一个垂直盒子容器, 把上面 6 个 JPanel 串起来作为内容面板添加到窗口
         Box vBox = Box.createVerticalBox();
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(label01);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(panel01);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(panel02);
+        vBox.add(Box.createVerticalStrut(20));
+        vBox.add(panel03);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button1);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button2);
-        jf.setContentPane(vBox);
+        vBox.add(Box.createVerticalStrut(20));
+        Box baseBox = Box.createHorizontalBox();
+        baseBox.add(Box.createHorizontalStrut(30));
+        baseBox.add(vBox);
+        baseBox.add(Box.createHorizontalStrut(30));
+        jf.setContentPane(baseBox);
+
         jf.pack();
         jf.setLocationRelativeTo(null);
         jf.setVisible(true);
         windowClose(jf);
+
 
     }
 
@@ -1093,6 +1293,7 @@ class TransferResult extends JFrame {
         jf.pack();
         jf.setLocationRelativeTo(null);
         jf.setVisible(true);
+        jf.setSize(500,300);
         windowClose(jf);
 
     }
@@ -1138,9 +1339,12 @@ class ChangeInformationSelection extends JFrame {
     private ChangeInformationSelection() {
         jf = new JFrame("ChangeInformationSelection");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        JPanel panel01 = new JPanel();
         JLabel label02 = new JLabel();
+        panel01.add(label02);
+        label02.setHorizontalAlignment(SwingConstants.CENTER);
         label02.setText("Please Select What You Want To Change");
-        label02.setFont(new Font(null, Font.PLAIN, 20));  // 设置字体，null 表示使用默认字体
+        label02.setFont(new Font("Times New Roman", Font.PLAIN, 20));  // 设置字体，null 表示使用默认字体
         Button button1 = new Button("USER NAME");
         Button button2 = new Button("PASSWORD");
         Button button3 = new Button("PHONE NUMBER");
@@ -1157,17 +1361,50 @@ class ChangeInformationSelection extends JFrame {
         button4.addActionListener(cisActionListener04);
         CISActionListener05 cisActionListener05 = new CISActionListener05();
         button5.addActionListener(cisActionListener05);
+        JLabel label01 = new JLabel();
+        ImageIcon ii = new ImageIcon("img/12.jpg");
+        ii.setImage(ii.getImage().getScaledInstance(200, 282,Image.SCALE_SMOOTH));
+        label01.setIcon(ii);
+        JPanel panel02 = new JPanel();
+        //label01 = new JLabel();
+        panel02.add(label01);
+        label02.setHorizontalAlignment(SwingConstants.CENTER);
+        Font font = new Font("宋体", Font.PLAIN, 20);
+        button1.setSize(100, 5);
+        button2.setSize(100, 5);
+        button3.setSize(100, 5);
+        button4.setSize(100, 5);
+        button5.setSize(100, 5);
+        button1.setFont(font);
+        button2.setFont(font);
+        button3.setFont(font);
+        button4.setFont(font);
+        button5.setFont(font);
         Box vBox = Box.createVerticalBox();
 // 创建一个垂直盒子容器, 把上面 6 个 JPanel 串起来作为内容面板添加到窗口
-        vBox.add(label02);
+        vBox.add(Box.createVerticalStrut(20));
+        vBox.add(panel01);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button1);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button2);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button3);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button4);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button5);
-        jf.setContentPane(vBox);
+        vBox.add(Box.createVerticalStrut(20));
+        vBox.add(panel02);
+        vBox.add(Box.createVerticalStrut(20));
+        Box baseBox = Box.createHorizontalBox();
+        baseBox.add(Box.createHorizontalStrut(30));
+        baseBox.add(vBox);
+        baseBox.add(Box.createHorizontalStrut(30));
+        jf.setContentPane(baseBox);
         jf.pack();
         jf.setLocationRelativeTo(null);
+        jf.setSize(500,700);
         jf.setVisible(true);
         windowClose(jf);
 
@@ -1274,29 +1511,50 @@ class ChangeInformation extends JFrame {
         jf = new JFrame("ChangeInformation");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JPanel panel01 = new JPanel();
-
         //label001.setText("                what change");
         panel01.add(label01);
         panel01.add(label001);
         //label01.setText("Please enter what you want to change:(birth date/username/password/phone number/gender)");
-        label001.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
+        label001.setFont(new Font("Times New Roman", Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
+        label01.setFont(new Font("Times New Roman", Font.PLAIN, 25));
+        label01.setHorizontalAlignment(SwingConstants.CENTER);
+        label001.setHorizontalAlignment(SwingConstants.CENTER);
         panel01.add(textField);
         JLabel label02 = new JLabel();
-        label02.setIcon(new ImageIcon("img/06.jpg"));
+        ImageIcon ii = new ImageIcon("img/13.jpg");
+        ii.setImage(ii.getImage().getScaledInstance(200, 286,Image.SCALE_SMOOTH));
+        label02.setIcon(ii);
+        JPanel panel02 = new JPanel();
+        //label01 = new JLabel();
+        panel02.add(label02);
+        label02.setHorizontalAlignment(SwingConstants.CENTER);
         Button button = new Button("OK");
+        button.setSize(100, 5);
+        button.setFont(new Font("宋体",Font.PLAIN, 15));
         //因为addActionListener需要一个ActionListener，所以就要new一个出来
         CIActionListener ciActionListener = new CIActionListener();
         button.addActionListener(ciActionListener);
         Box vBox = Box.createVerticalBox();
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(label001);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(label01);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(panel01);
-        vBox.add(label02);
+        vBox.add(Box.createVerticalStrut(20));
+        vBox.add(panel02);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button);
-        jf.setContentPane(vBox);
+        vBox.add(Box.createVerticalStrut(20));
+        Box baseBox = Box.createHorizontalBox();
+        baseBox.add(Box.createHorizontalStrut(30));
+        baseBox.add(vBox);
+        baseBox.add(Box.createHorizontalStrut(30));
+        jf.setContentPane(baseBox);
         jf.pack();
         jf.setLocationRelativeTo(null);
         jf.setVisible(true);
+        jf.setSize(700,600);
         windowClose(jf);
 
     }
@@ -1351,23 +1609,41 @@ class ChangeInformationResult extends JFrame {
         jf = new JFrame("ChangeInformationResult");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JPanel panel01 = new JPanel();
-
+        panel01.add(label01);
+        label01.setFont(new Font("Times New Roman", Font.PLAIN, 25));
+        label01.setHorizontalAlignment(SwingConstants.CENTER);
         JLabel label02 = new JLabel();
-        label02.setIcon(new ImageIcon("img/07.png"));
+        ImageIcon ii = new ImageIcon("img/15.jpg");
+        ii.setImage(ii.getImage().getScaledInstance(200, 150,Image.SCALE_SMOOTH));
+        label02.setIcon(ii);
+        JPanel panel02 = new JPanel();
+        //label01 = new JLabel();
+        panel02.add(label02);
+        label02.setHorizontalAlignment(SwingConstants.CENTER);
         Button button = new Button("OK");
+        button.setFont(new Font("宋体",Font.PLAIN, 15));
+        button.setSize(100, 5);
         CIRActionListener cirActionListener = new CIRActionListener();
         button.addActionListener(cirActionListener);
         //label01.setText("");
         label01.setFont(new Font(null, Font.PLAIN, 25));  // 设置字体，null 表示使用默认字体
         Box vBox = Box.createVerticalBox();
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(panel01);
-        vBox.add(label01);
-        vBox.add(label02);
+        vBox.add(Box.createVerticalStrut(20));
+        vBox.add(panel02);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button);
-        jf.setContentPane(vBox);
+        vBox.add(Box.createVerticalStrut(20));
+        Box baseBox = Box.createHorizontalBox();
+        baseBox.add(Box.createHorizontalStrut(30));
+        baseBox.add(vBox);
+        baseBox.add(Box.createHorizontalStrut(30));
+        jf.setContentPane(baseBox);
         jf.pack();
         jf.setLocationRelativeTo(null);
         jf.setVisible(true);
+        jf.setSize(400,300);
         windowClose(jf);
 
     }
@@ -1409,13 +1685,27 @@ class ROOTAccount extends JFrame {
         jf = new JFrame("ROOTAccount ");
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JLabel label01 = new JLabel();
-        label01.setText("ROOT                        ");
-        label01.setFont(new Font(null, Font.PLAIN, 20));  // 设置字体，null 表示使用默认字体
+        JPanel panel01 = new JPanel();
+        panel01.add(label01);
+        label01.setHorizontalAlignment(SwingConstants.CENTER);
+        label01.setText("ROOT");
+        label01.setFont(new Font(null, Font.PLAIN, 50));  // 设置字体，null 表示使用默认字体
+        Font font = new Font("宋体", Font.PLAIN, 20);
         Button button1 = new Button("Import accounts from users.xls");
         Button button2 = new Button("Export all users to users.xls");
         Button button3 = new Button("Generate PDF reports");
         Button button4 = new Button("Close accounts for old people over 70 years old");
         Button button5 = new Button("BACK TO START FRAME");
+        button1.setSize(100, 5);
+        button2.setSize(100, 5);
+        button3.setSize(100, 5);
+        button4.setSize(100, 5);
+        button5.setSize(100, 5);
+        button1.setFont(font);
+        button2.setFont(font);
+        button3.setFont(font);
+        button4.setFont(font);
+        button5.setFont(font);
         RAActionListener01 raActionListener01 = new RAActionListener01();
         button1.addActionListener(raActionListener01);
         RAActionListener02 raActionListener02 = new RAActionListener02();
@@ -1426,15 +1716,36 @@ class ROOTAccount extends JFrame {
         button4.addActionListener(raActionListener04);
         RAActionListener05 raActionListener05 = new RAActionListener05();
         button5.addActionListener(raActionListener05);
+        JLabel label02 = new JLabel();
+        ImageIcon ii = new ImageIcon("img/16.jpg");
+        ii.setImage(ii.getImage().getScaledInstance(200, 200,Image.SCALE_SMOOTH));
+        label02.setIcon(ii);
+        JPanel panel02 = new JPanel();
+        //label01 = new JLabel();
+        panel02.add(label02);
+        label02.setHorizontalAlignment(SwingConstants.CENTER);
         Box vBox = Box.createVerticalBox();
 // 创建一个垂直盒子容器, 把上面 6 个 JPanel 串起来作为内容面板添加到窗口
-        vBox.add(label01);
+        vBox.add(Box.createVerticalStrut(20));
+        vBox.add(panel01);
+        vBox.add(Box.createVerticalStrut(20));
+        vBox.add(panel02);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button1);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button2);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button3);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button4);
+        vBox.add(Box.createVerticalStrut(20));
         vBox.add(button5);
-        jf.setContentPane(vBox);
+        vBox.add(Box.createVerticalStrut(20));
+        Box baseBox = Box.createHorizontalBox();
+        baseBox.add(Box.createHorizontalStrut(30));
+        baseBox.add(vBox);
+        baseBox.add(Box.createHorizontalStrut(30));
+        jf.setContentPane(baseBox);
         jf.pack();
         jf.setLocationRelativeTo(null);
         jf.setVisible(true);
